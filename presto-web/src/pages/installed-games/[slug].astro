@@ -1,0 +1,34 @@
+---
+import { CollectionEntry, getCollection } from "astro:content";
+import { GameSchema } from "../../content/config";
+import GameLayout from "../../layouts/GameLayout.astro";
+import createSlug from "../../lib/createSlug"
+
+export async function getStaticPaths() {
+  const postEntries = await getCollection("game");
+  return postEntries.map((entry) => ({
+    params: { slug: createSlug(entry.data.title, entry.slug) },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<"game">;
+}
+
+const { entry } = Astro.props;
+const post: GameSchema = entry.data;
+const { Content } = await entry.render();
+---
+
+<GameLayout
+  title={post.title}
+  description={post.description}
+  releaseDate={post.releaseDate}
+  heroImage={post.heroImage}
+  updatedDate={post.updatedDate}
+  badge={post.badge}
+  tags={post.tags}
+>
+  <Content />
+</GameLayout>

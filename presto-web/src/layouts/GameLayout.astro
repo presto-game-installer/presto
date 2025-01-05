@@ -1,0 +1,56 @@
+---
+import { type gameSchema } from "../content/config";
+import BaseLayout from "./BaseLayout.astro";
+
+export interface Props extends gameSchema {}
+
+const { title, description, releaseDate, lastUpdatedDate, version, heroImage, badge, tags = [] } = Astro.props;
+import { Image } from "astro:assets";
+const formattedReleaseDate = new Date(releaseDate);
+const formattedLastUpdatedDate = new Date(lastUpdatedDate);
+---
+
+<BaseLayout title={title} description={description} image={heroImage}, ogType="article">
+  <main class="md:flex md:justify-center">
+    <article class="prose prose-lg max-w-[750px] prose-img:mx-auto">
+      {heroImage && <Image width={750} height={422} format="webp" src={heroImage} alt={title} class="w-full mb-6" />}
+      <h1 class="title my-2 text-4xl font-bold">{title}</h1>
+      {badge && <div class="badge badge-secondary my-1">{badge}</div>}
+      {
+        tags &&
+          tags.map((tag) => (
+            <a href={`/available-games/tag/${tag}`} class="badge badge-outline ml-2 no-underline">
+              {tag}
+            </a>
+          ))
+      }
+      {
+          releaseDate && (
+              <div>
+                {" "}
+                Release Date: <time>{formattedReleaseDate.toLocaleDateString()}</time>
+                {" "}
+              </div>
+          )
+      }
+      {
+          lastUpdatedDate && (
+              <div>
+                {" "}
+                Last updated: <time>{formattedLastUpdatedDate.toLocaleDateString()}</time>{" "}
+              </div>
+          )
+      }
+      {
+          version && (
+              <div>
+                {" "}
+                Version: {version}{" "}
+              </div>
+          )
+      }
+      <div class="divider my-2"></div>
+      <slot />
+    </article>
+  </main>
+</BaseLayout>
