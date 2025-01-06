@@ -1,7 +1,6 @@
-# Tauri + Vanilla TS
+# Presto   
+## An easy-to-use game installer
 
-This template should help get you started developing with Tauri in vanilla HTML, CSS and Typescript.
+### `WARNING: this is currently highly experimental`
 
-## Recommended IDE Setup
-
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+Credit to https://github.com/manuelernestog/astrofy for the theme!
