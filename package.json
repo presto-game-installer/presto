@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "web-config": "cp ./src/config.web.ts ./src/config.ts" ,
+    "web-config": "cp ./src/config.web.ts ./src/config.ts",
     "client-config": "cp ./src/config.client.ts ./src/config.ts",
     "astro-dev": "astro dev",
     "astro-start": "astro dev",
@@ -17,12 +17,18 @@
     "tauri": "tauri"
   },
   "dependencies": {
-    "@tauri-apps/api": "^2",
-    "@tauri-apps/plugin-opener": "^2",
     "@astrojs/mdx": "^4.0.3",
     "@astrojs/rss": "^4.0.10",
     "@astrojs/sitemap": "^3.2.1",
     "@astrojs/tailwind": "^5.1.4",
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-dialog": "~2",
+    "@tauri-apps/plugin-log": "~2",
+    "@tauri-apps/plugin-opener": "^2",
+    "@tauri-apps/plugin-shell": "~2",
+    "@tauri-apps/plugin-store": "~2",
+    "@tauri-apps/plugin-updater": "~2",
+    "@tauri-apps/plugin-upload": "~2",
     "astro": "^5.1.1",
     "daisyui": "^4.4.10",
     "sharp": "^0.32.6",
@@ -31,7 +37,7 @@
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.10",
     "@tauri-apps/cli": "^2",
-    "vite": "^6.0.3",
-    "typescript": "~5.6.2"
+    "typescript": "~5.6.2",
+    "vite": "^6.0.3"
   }
 }
