@@ -1,0 +1,37 @@
+{
+  "name": "presto",
+  "private": true,
+  "version": "1.0.0.0",
+  "type": "module",
+  "scripts": {
+    "web-config": "cp ./src/config.web.ts ./src/config.ts" ,
+    "client-config": "cp ./src/config.client.ts ./src/config.ts",
+    "astro-dev": "astro dev",
+    "astro-start": "astro dev",
+    "astro-build": "astro build",
+    "astro-preview": "astro preview",
+    "astro": "astro",
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-opener": "^2",
+    "@astrojs/mdx": "^4.0.3",
+    "@astrojs/rss": "^4.0.10",
+    "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/tailwind": "^5.1.4",
+    "astro": "^5.1.1",
+    "daisyui": "^4.4.10",
+    "sharp": "^0.32.6",
+    "tailwindcss": "^3.3.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.10",
+    "@tauri-apps/cli": "^2",
+    "vite": "^6.0.3",
+    "typescript": "~5.6.2"
+  }
+}

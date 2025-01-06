@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "identifier": "com.presto-client.app",
   "build": {
-    "beforeDevCommand": "npm run dev",
-    "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "npm run build",
+    "beforeDevCommand": "npm run astro-dev",
+    "devUrl": "http://localhost:4321",
+    "beforeBuildCommand": "npm run astro-build",
     "frontendDist": "../dist"
   },
   "app": {
