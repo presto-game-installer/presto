@@ -7,5 +7,12 @@ import tailwind from "@astrojs/tailwind";
 export default defineConfig({
   site: 'https://presto-game-installer.github.io',
   base: '/',
-  integrations: [mdx(), sitemap(), tailwind()]
+  integrations: [mdx(), sitemap(), tailwind()],
+  vite: {
+    server: {
+      watch: {
+        usePolling: true,
+      }
+    }
+  },
 });
