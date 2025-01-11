@@ -1,0 +1,32 @@
+---
+const { downloadUrlMac } = Astro.props;
+---
+<script>
+    import { download } from '@tauri-apps/plugin-upload';
+    import { save } from "@tauri-apps/plugin-dialog";
+
+    const installButton = document.querySelector("button.install");
+    if(installButton != null) {
+
+        installButton.addEventListener("click", async () => {
+            const pathToSave = await save({
+                filters: [
+                    {
+                        name: "zip",
+                        extensions: ["zip"],
+                    },
+                ],
+            });
+
+            if (pathToSave) {
+                download(
+                    installButton.dataset.downloadUrlMac,
+                    pathToSave,
+                    ({progress, total}) =>
+                        console.log(`Downloaded ${progress} of ${total} bytes`),
+                );
+            }
+        });
+    }
+</script>
+<button class="btn install" data-download-url-mac={downloadUrlMac}>Install</button>

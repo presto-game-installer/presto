@@ -10,7 +10,7 @@ version: "8.0.6"
 lastUpdatedDate: "8/12/2024"
 linuxDownload: "https://github.com/HarbourMasters/Shipwright/releases/download/8.0.6/SoH-MacReady-Golf-Linux-Performance.zip"
 windowsDownload: "https://github.com/HarbourMasters/Shipwright/releases/download/8.0.6/SoH-MacReady-Golf-Win64.zip"
-macosDownload: "https://github.com/HarbourMasters/Shipwright/releases/download/8.0.6/SoH-MacReady-Golf-Mac.zip"
+macDownload: "https://github.com/HarbourMasters/Shipwright/releases/download/8.0.6/SoH-MacReady-Golf-Mac.zip"
 ---
 
 Info goes here

@@ -1,15 +1,25 @@
 ---
 import { type gameSchema } from "../content/config";
 import BaseLayout from "./BaseLayout.astro";
+import Install from "../components/Install.astro";
 
 export interface Props extends gameSchema {}
 
-const { title, description, releaseDate, lastUpdatedDate, version, heroImage, badge, tags = [] } = Astro.props;
+const { title,
+  description,
+  releaseDate,
+  lastUpdatedDate,
+  linuxDownload,
+  windowsDownload,
+  macDownload,
+  version,
+  heroImage,
+  badge,
+  tags = [] } = Astro.props;
 import { Image } from "astro:assets";
 const formattedReleaseDate = new Date(releaseDate);
 const formattedLastUpdatedDate = new Date(lastUpdatedDate);
 ---
-
 <BaseLayout title={title} description={description} image={heroImage}, ogType="article">
   <main class="md:flex md:justify-center">
     <article class="prose prose-lg max-w-[750px] prose-img:mx-auto">
@@ -50,6 +60,7 @@ const formattedLastUpdatedDate = new Date(lastUpdatedDate);
           )
       }
       <div class="divider my-2"></div>
+      <Install downloadUrlMac={macDownload}/>
       <slot />
     </article>
   </main>

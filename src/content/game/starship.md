@@ -11,7 +11,7 @@ version: "1.0"
 lastUpdatedDate: "12/22/2024"
 linuxDownload: ""
 windowsDownload: "https://github.com/HarbourMasters/Starship/releases/download/v1.0.0/Starship-Centauri-Alfa-Windows.zip"
-macosDownload: ""
+macDownload: ""
 ---
 
 Info goes here

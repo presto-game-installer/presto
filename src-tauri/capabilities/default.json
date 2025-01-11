@@ -9,6 +9,7 @@
     "core:default",
     "opener:default",
     "upload:default",
-    "store:default"
+    "store:default",
+    "dialog:default"
   ]
 }
