@@ -1,0 +1,45 @@
+---
+---
+<script is:inline>
+    //This needs to be inline because things that bind to the ui need to be in inline
+
+    //update page when the page is loaded
+    function updatePage() {
+        document.querySelector(".getbasedir").textContent = globalThis.presto.currentSettings.installPath;
+    }
+
+    // on dom ready function
+    function ready(fn) {
+        if (document.readyState !== 'loading') {
+            fn();
+            return;
+        }
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+
+    // when the dom is ready run this
+    ready(function(){
+        // uniform way of seeing if the settings are available globally
+        if(!globalThis.presto?.currentSettings) {
+            window.addEventListener('presto:settings-loaded', () => {
+                updatePage();
+            });
+        } else {
+            updatePage();
+        }
+
+        //bind the ui to the functions for tauri
+        document.querySelector("button.setbasedir").addEventListener("click", async () => {
+            globalThis.presto.functions.setBaseDirectory().then(
+                () => {
+                    updatePage();
+                });
+        });
+    })
+</script>
+<div>
+    <button class="btn setbasedir">Set Base Directory</button>
+</div>
+<div>
+    Base directory set to: <span class="getbasedir"></span>
+</div>

@@ -2,6 +2,7 @@
 import { type gameSchema } from "../content/config";
 import BaseLayout from "./BaseLayout.astro";
 import Install from "../components/Install.astro";
+import createSlug from "../lib/createSlug";
 
 export interface Props extends gameSchema {}
 
@@ -19,6 +20,7 @@ const { title,
 import { Image } from "astro:assets";
 const formattedReleaseDate = new Date(releaseDate);
 const formattedLastUpdatedDate = new Date(lastUpdatedDate);
+const gamePathTitle = createSlug(title, "noslug");
 ---
 <BaseLayout title={title} description={description} image={heroImage}, ogType="article">
   <main class="md:flex md:justify-center">
@@ -60,7 +62,7 @@ const formattedLastUpdatedDate = new Date(lastUpdatedDate);
           )
       }
       <div class="divider my-2"></div>
-      <Install downloadUrlMac={macDownload}/>
+      <Install gamePathTitle={gamePathTitle} downloadUrlMac={macDownload}/>
       <slot />
     </article>
   </main>

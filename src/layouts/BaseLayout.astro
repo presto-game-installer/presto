@@ -4,6 +4,7 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import SideBar from "../components/SideBar.astro";
 import { ViewTransitions } from "astro:transitions";
+import Settings from "../components/settings/Settings.astro";
 
 import { SITE_TITLE, SITE_DESCRIPTION, TRANSITION_API } from "../config";
 
@@ -24,12 +25,13 @@ const {
     {TRANSITION_API && <ViewTransitions />}
   </head>
   <body>
+    <Settings transition:persist/>
     <div class="bg-base-100 drawer lg:drawer-open">
       <input id="my-drawer" type="checkbox" class="drawer-toggle" />
       <div class="drawer-content bg-base-100">
         <Header title={SITE_TITLE} />
         <div class="md:flex md:justify-center">
-          <main class="p-6 pt-5 lg:max-w-[900px] max-w-[100vw]">
+          <main class="p-6 pt-5 container">
             <slot />
           </main>
         </div>

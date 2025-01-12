@@ -1,27 +1,21 @@
 ---
-const { downloadUrlMac } = Astro.props;
+const { downloadUrlMac,
+    gamePathTitle } = Astro.props;
 ---
 <script>
     import { download } from '@tauri-apps/plugin-upload';
-    import { save } from "@tauri-apps/plugin-dialog";
+    import { load } from '@tauri-apps/plugin-store';
+
+    const store = await load('presto-data.json', { autoSave: true });
+    const currentSettings = await store.get<{ value: string }>('settings');
 
     const installButton = document.querySelector("button.install");
     if(installButton != null) {
-
         installButton.addEventListener("click", async () => {
-            const pathToSave = await save({
-                filters: [
-                    {
-                        name: "zip",
-                        extensions: ["zip"],
-                    },
-                ],
-            });
-
-            if (pathToSave) {
+            if (currentSettings && currentSettings.installPath) {
                 download(
                     installButton.dataset.downloadUrlMac,
-                    pathToSave,
+                    `${currentSettings.installPath}/${installButton.dataset.gamePathTitle}.zip`,
                     ({progress, total}) =>
                         console.log(`Downloaded ${progress} of ${total} bytes`),
                 );
@@ -29,4 +23,4 @@ const { downloadUrlMac } = Astro.props;
         });
     }
 </script>
-<button class="btn install" data-download-url-mac={downloadUrlMac}>Install</button>
+<button class="btn install" data-game-path-title={gamePathTitle} data-download-url-mac={downloadUrlMac}>Install</button>

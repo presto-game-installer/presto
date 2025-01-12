@@ -1,0 +1,36 @@
+---
+---
+<script>
+    //global function loader/setter
+    import { load } from '@tauri-apps/plugin-store';
+    import { open } from "@tauri-apps/plugin-dialog";
+
+    //setup presto
+    globalThis.presto = {};
+
+    //setup settings and store
+    globalThis.presto.currentSettings = {};
+    globalThis.presto.store = await load('presto-data.json', { autoSave: true });
+    await globalThis.presto.store.get<{ value: string }>('settings').then(
+        (settings) => {
+            if (settings != null) {
+                globalThis.presto.currentSettings = settings;
+            }
+            const event = new CustomEvent('presto:settings-loaded', {});
+            window.dispatchEvent(event);
+        }
+    );
+
+    //setup functions needed that interact with tauri
+    globalThis.presto.functions = {}
+    globalThis.presto.functions.setBaseDirectory = async () => {
+        const newInstallPath = await open({
+            directory: true,
+        });
+
+        if (newInstallPath) {
+            globalThis.presto.currentSettings.installPath = newInstallPath;
+            await globalThis.presto.store.set('settings', globalThis.presto.currentSettings);
+        }
+    }
+</script>
