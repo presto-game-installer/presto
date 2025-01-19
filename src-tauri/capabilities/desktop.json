@@ -9,9 +9,42 @@
     "main"
   ],
   "permissions": [
-    "updater:default",
+    "core:default",
+    "opener:default",
     "upload:default",
+    "store:default",
     "dialog:default",
-    "updater:default"
+    "updater:default",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "name": "exec-nix-unzip",
+          "cmd": "unzip",
+          "args": [
+            "-o",
+            "-d",
+            {
+              "validator": "\\S+"
+            }
+          ],
+          "sidecar": false
+        },
+        {
+          "name": "exec-win-powershell",
+          "cmd": "powershell",
+          "args": [
+            "Expand-Archive",
+            "-Path",
+            "-DestinationPath",
+            "-Force",
+            {
+              "validator": "\\S+"
+            }
+          ],
+          "sidecar": false
+        }
+      ]
+    }
   ]
 }

@@ -5,7 +5,7 @@ const { downloadUrlMac, downloadUrlWindows, downloadUrlLinux, gamePathTitle } = 
     import { download } from '@tauri-apps/plugin-upload';
     import { load } from '@tauri-apps/plugin-store';
     import { type } from '@tauri-apps/plugin-os';
-    import { Command } from '@tauri-apps/api/shell';
+    import { Command } from '@tauri-apps/plugin-shell';
 
     const store = await load('presto-data.json', { autoSave: true });
     const currentSettings = await store.get<{ value: string }>('settings');
@@ -27,9 +27,46 @@ const { downloadUrlMac, downloadUrlWindows, downloadUrlLinux, gamePathTitle } = 
                 let progressTotal = 0;
                 const zipPath = `${currentSettings.installPath}/${installButton.dataset.gamePathTitle}.zip`;
                 const extractPath = `${currentSettings.installPath}/${installButton.dataset.gamePathTitle}`;
+                const tempPath = `${currentSettings.installPath}/temp`;
+
+                try {
+                    if (currentPlatform === 'windows') {
+                        // Check if directory exists first
+                        const checkResult = await Command.create('exec-win-powershell', [
+                            'Test-Path',
+                            '-Path', tempPath
+                        ]).execute();
+                        
+                        if (checkResult.stdout.trim() === 'True') {
+                            await Command.create('exec-win-powershell', [
+                                'Remove-Item',
+                                '-Path', tempPath,
+                                '-Recurse',
+                                '-Force'
+                            ]).execute();
+                        }
+                    } else {
+                        // macOS and Linux both use test -d for directory check
+                        const checkResult = await Command.create('exec-nix-unzip', [
+                            'test',
+                            '-d',
+                            tempPath
+                        ]).execute();
+                        
+                        if (checkResult.code === 0) {
+                            await Command.create('exec-nix-unzip', [
+                                'rm',
+                                '-rf',
+                                tempPath
+                            ]).execute();
+                        }
+                    }
+                } catch (e) {
+                    console.log("Error checking/removing temp directory:", e);
+                }
                 
                 await download(
-                    installButton.dataset.downloadUrlMac,
+                    installButton.dataset[downloadFile],
                     zipPath,
                     ({progress, total}) => {
                         console.log(`Downloaded ${progress} of ${total} bytes`);
@@ -38,8 +75,9 @@ const { downloadUrlMac, downloadUrlWindows, downloadUrlLinux, gamePathTitle } = 
                     },
                 ).finally(async () => {
                     // Extract based on platform
+                    let result;
                     if (currentPlatform === 'windows') {
-                        await new Command('powershell', [
+                        result = await new Command('exec-win-powershell', [
                             'Expand-Archive',
                             '-Path', zipPath,
                             '-DestinationPath', extractPath,
@@ -47,11 +85,14 @@ const { downloadUrlMac, downloadUrlWindows, downloadUrlLinux, gamePathTitle } = 
                         ]).execute();
                     } else {
                         // macOS and Linux both use unzip
-                        await new Command('unzip', [
+                        result = await new Command('exec-nix-unzip', [
                             '-o', zipPath,
                             '-d', extractPath
                         ]).execute();
                     }
+                    console.log("zipPath", zipPath);
+                    console.log("extractPath", extractPath);
+                    console.log("result", result);
                     globalThis.presto.functions.showDownloadBar(false);
                 });
             }
