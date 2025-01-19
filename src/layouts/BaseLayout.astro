@@ -3,10 +3,12 @@ import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import SideBar from "../components/SideBar.astro";
+import StatusBar from "../components/StatusBar.astro";
 import { ViewTransitions } from "astro:transitions";
 import Settings from "../components/settings/Settings.astro";
 
 import { SITE_TITLE, SITE_DESCRIPTION, TRANSITION_API } from "../config";
+import { ProgressBarStatus } from "@tauri-apps/api/window";
 
 const {
   image,
@@ -39,5 +41,6 @@ const {
       </div>
       {includeSidebar && <SideBar sideBarActiveItemID={sideBarActiveItemID} />}
     </div>
+    <StatusBar />
   </body>
 </html>

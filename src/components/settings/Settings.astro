@@ -33,4 +33,25 @@
             await globalThis.presto.store.set('settings', globalThis.presto.currentSettings);
         }
     }
+
+    // Show/hide download bar
+    globalThis.presto.functions.showDownloadBar = (show = true) => {
+      const bar = document.getElementById('download-progress');
+      if (bar) {
+        bar.style.transform = show ? 'translateY(0)' : 'translateY(100%)';
+      }
+    }
+
+    // Update progress
+    globalThis.presto.functions.updateProgress = (filename, progress) => {
+      const bar = document.getElementById('download-bar');
+      const percentage = document.getElementById('download-percentage');
+      const filenameEl = document.getElementById('download-filename');
+      
+      if (bar && percentage && filenameEl) {
+        bar.style.width = `${progress}%`;
+        percentage.textContent = `${Math.round(progress)}%`;
+        filenameEl.textContent = filename;
+      }
+    }
 </script>
