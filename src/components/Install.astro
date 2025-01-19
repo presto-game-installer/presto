@@ -1,26 +1,66 @@
 ---
-const { downloadUrlMac,
-    gamePathTitle } = Astro.props;
+const { downloadUrlMac, downloadUrlWindows, downloadUrlLinux, gamePathTitle } = Astro.props;
 ---
 <script>
     import { download } from '@tauri-apps/plugin-upload';
     import { load } from '@tauri-apps/plugin-store';
+    import { type } from '@tauri-apps/plugin-os';
+    import { Command } from '@tauri-apps/api/shell';
 
     const store = await load('presto-data.json', { autoSave: true });
     const currentSettings = await store.get<{ value: string }>('settings');
+    // Detect OS
+    console.log(currentSettings);
+    const currentPlatform = type();
+    console.log("currentPlatform", currentPlatform);
+    const downloadFile = {
+        'macos': 'downloadUrlMac',
+        'windows': 'downloadUrlWindows', 
+        'linux': 'downloadUrlLinux'
+    }[currentPlatform];
 
     const installButton = document.querySelector("button.install");
     if(installButton != null) {
         installButton.addEventListener("click", async () => {
             if (currentSettings && currentSettings.installPath) {
-                download(
+                globalThis.presto.functions.showDownloadBar(true);
+                let progressTotal = 0;
+                const zipPath = `${currentSettings.installPath}/${installButton.dataset.gamePathTitle}.zip`;
+                const extractPath = `${currentSettings.installPath}/${installButton.dataset.gamePathTitle}`;
+                
+                await download(
                     installButton.dataset.downloadUrlMac,
-                    `${currentSettings.installPath}/${installButton.dataset.gamePathTitle}.zip`,
-                    ({progress, total}) =>
-                        console.log(`Downloaded ${progress} of ${total} bytes`),
-                );
+                    zipPath,
+                    ({progress, total}) => {
+                        console.log(`Downloaded ${progress} of ${total} bytes`);
+                        progressTotal = progress;
+                        globalThis.presto.functions.updateProgress(installButton.dataset.gamePathTitle + '.zip', (progressTotal / total) * 100);
+                    },
+                ).finally(async () => {
+                    // Extract based on platform
+                    if (currentPlatform === 'windows') {
+                        await new Command('powershell', [
+                            'Expand-Archive',
+                            '-Path', zipPath,
+                            '-DestinationPath', extractPath,
+                            '-Force'
+                        ]).execute();
+                    } else {
+                        // macOS and Linux both use unzip
+                        await new Command('unzip', [
+                            '-o', zipPath,
+                            '-d', extractPath
+                        ]).execute();
+                    }
+                    globalThis.presto.functions.showDownloadBar(false);
+                });
             }
         });
     }
 </script>
-<button class="btn install" data-game-path-title={gamePathTitle} data-download-url-mac={downloadUrlMac}>Install</button>
+<button class="btn install" 
+data-game-path-title={gamePathTitle} 
+data-download-url-mac={downloadUrlMac}
+data-download-url-windows={downloadUrlWindows}
+data-download-url-linux={downloadUrlLinux}>
+Install</button>
