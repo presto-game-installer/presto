@@ -6,6 +6,7 @@ import SideBar from "../components/SideBar.astro";
 import StatusBar from "../components/StatusBar.astro";
 import { ViewTransitions } from "astro:transitions";
 import Settings from "../components/settings/Settings.astro";
+import { IS_CLIENT } from "../config";
 
 import { SITE_TITLE, SITE_DESCRIPTION, TRANSITION_API } from "../config";
 import { ProgressBarStatus } from "@tauri-apps/api/window";
@@ -41,6 +42,6 @@ const {
       </div>
       {includeSidebar && <SideBar sideBarActiveItemID={sideBarActiveItemID} />}
     </div>
-    <StatusBar />
+    {IS_CLIENT && <StatusBar />}
   </body>
 </html>
