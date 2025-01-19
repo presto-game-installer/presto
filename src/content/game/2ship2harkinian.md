@@ -11,6 +11,7 @@ lastUpdatedDate: "12/19/2024"
 linuxDownload: "https://github.com/HarbourMasters/2ship2harkinian/releases/download/1.1.2/2Ship-Satoko-Charlie-Linux.zip"
 windowsDownload: "https://github.com/HarbourMasters/2ship2harkinian/releases/download/1.1.2/2Ship-Satoko-Charlie-Win64.zip"
 macDownload: "https://github.com/HarbourMasters/2ship2harkinian/releases/download/1.1.2/2Ship-Satoko-Charlie-Mac.zip"
+dataDownload: "https://archive.org/download/z64-pal-gc-debug/z64mm-NA-GC.z64"
 ---
 
 Info goes here

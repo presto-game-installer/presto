@@ -11,6 +11,7 @@ lastUpdatedDate: "8/12/2024"
 linuxDownload: "https://github.com/HarbourMasters/Shipwright/releases/download/8.0.6/SoH-MacReady-Golf-Linux-Performance.zip"
 windowsDownload: "https://github.com/HarbourMasters/Shipwright/releases/download/8.0.6/SoH-MacReady-Golf-Win64.zip"
 macDownload: "https://github.com/HarbourMasters/Shipwright/releases/download/8.0.6/SoH-MacReady-Golf-Mac.zip"
+dataDownload: "https://archive.org/download/z64-pal-gc-debug/z64-PAL-1.1.z64"
 ---
 
 Info goes here
