@@ -7,6 +7,8 @@ const gameSchema = z.object({
     linuxDownload: z.string(),
     windowsDownload: z.string(),
     macDownload: z.string(),
+    dataDownload: z.string(),
+    romInstallPath: z.string(),
     version:  z.string(),
     heroImage: z.string().optional(),
     badge: z.string().optional(),

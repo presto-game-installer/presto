@@ -1,5 +1,10 @@
 ---
-const { downloadUrlMac, downloadUrlWindows, downloadUrlLinux, gamePathTitle } = Astro.props;
+const { downloadUrlMac, 
+downloadUrlWindows, 
+downloadUrlLinux, 
+downloadUrlData, 
+gamePathTitle,
+romInstallPath } = Astro.props;
 ---
 <script>
     import { download } from '@tauri-apps/plugin-upload';
@@ -60,5 +65,7 @@ const { downloadUrlMac, downloadUrlWindows, downloadUrlLinux, gamePathTitle } = 
 data-game-path-title={gamePathTitle} 
 data-download-url-mac={downloadUrlMac}
 data-download-url-windows={downloadUrlWindows}
-data-download-url-linux={downloadUrlLinux}>
+data-download-url-linux={downloadUrlLinux}
+data-download-url-data={downloadUrlData}
+data-rom-install-path={romInstallPath}>
 Install</button>

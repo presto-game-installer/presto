@@ -1,6 +1,6 @@
 ---
-import { CollectionEntry, getCollection } from "astro:content";
-import { GameSchema } from "../../content/config";
+import { type CollectionEntry, getCollection } from "astro:content";
+import { type gameSchema } from "../../content/config";
 import GameLayout from "../../layouts/GameLayout.astro";
 import createSlug from "../../lib/createSlug"
 
@@ -10,14 +10,14 @@ export async function getStaticPaths() {
     params: { slug: createSlug(entry.data.title, entry.slug) },
     props: { entry },
   }));
-}
+} 
 
 interface Props {
   entry: CollectionEntry<"game">;
 }
 
 const { entry } = Astro.props;
-const post: GameSchema = entry.data;
+const post: gameSchema = entry.data;
 const { Content } = await entry.render();
 ---
 
@@ -25,10 +25,12 @@ const { Content } = await entry.render();
   title={post.title}
   description={post.description}
   releaseDate={post.releaseDate}
-  heroImage={post.heroImage}
   lastUpdatedDate={post.lastUpdatedDate}
+  heroImage={post.heroImage}
   linuxDownload={post.linuxDownload}
   windowsDownload={post.windowsDownload}
+  dataDownload={post.dataDownload}
+  romInstallPath={post.romInstallPath}
   macDownload={post.macDownload}
   version={post.version}
   badge={post.badge}

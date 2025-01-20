@@ -1,6 +1,6 @@
 ---
-import { CollectionEntry, getCollection } from "astro:content";
-import { GameSchema } from "../../content/config";
+import { type CollectionEntry, getCollection } from "astro:content";
+import { type gameSchema } from "../../content/config";
 import GameLayout from "../../layouts/GameLayout.astro";
 import createSlug from "../../lib/createSlug"
 
@@ -17,7 +17,7 @@ interface Props {
 }
 
 const { entry } = Astro.props;
-const post: GameSchema = entry.data;
+const post: gameSchema = entry.data;
 const { Content } = await entry.render();
 ---
 
@@ -25,11 +25,13 @@ const { Content } = await entry.render();
   title={post.title}
   description={post.description}
   releaseDate={post.releaseDate}
+  lastUpdatedDate={post.lastUpdatedDate}
   heroImage={post.heroImage}
-  updatedDate={post.updatedDate}
   linuxDownload={post.linuxDownload}
   windowsDownload={post.windowsDownload}
   macDownload={post.macDownload}
+  dataDownload={post.dataDownload}
+  romInstallPath={post.romInstallPath}
   badge={post.badge}
   tags={post.tags}
 >

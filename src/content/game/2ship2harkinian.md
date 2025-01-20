@@ -12,6 +12,7 @@ linuxDownload: "https://github.com/HarbourMasters/2ship2harkinian/releases/downl
 windowsDownload: "https://github.com/HarbourMasters/2ship2harkinian/releases/download/1.1.2/2Ship-Satoko-Charlie-Win64.zip"
 macDownload: "https://github.com/HarbourMasters/2ship2harkinian/releases/download/1.1.2/2Ship-Satoko-Charlie-Mac.zip"
 dataDownload: "https://archive.org/download/z64-pal-gc-debug/z64mm-NA-GC.z64"
+romInstallPath: "/Library/Application Support/com.2ship2harkinian.2s2h"
 ---
 
 Info goes here

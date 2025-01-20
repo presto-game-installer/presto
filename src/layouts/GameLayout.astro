@@ -13,6 +13,8 @@ const { title,
   linuxDownload,
   windowsDownload,
   macDownload,
+  dataDownload,
+  romInstallPath,
   version,
   heroImage,
   badge,
@@ -62,7 +64,12 @@ const gamePathTitle = createSlug(title, "noslug");
           )
       }
       <div class="divider my-2"></div>
-      <Install gamePathTitle={gamePathTitle} downloadUrlMac={macDownload}/>
+      <Install gamePathTitle={gamePathTitle}
+        downloadUrlWindows={windowsDownload} 
+        downloadUrlMac={macDownload} 
+        downloadUrlLinux={linuxDownload} 
+        downloadUrlData={dataDownload}
+        romInstallPath={romInstallPath}/>
       <slot />
     </article>
   </main>
