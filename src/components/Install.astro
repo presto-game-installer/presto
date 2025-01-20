@@ -28,42 +28,6 @@ const { downloadUrlMac, downloadUrlWindows, downloadUrlLinux, gamePathTitle } = 
                 const zipPath = `${currentSettings.installPath}/${installButton.dataset.gamePathTitle}.zip`;
                 const extractPath = `${currentSettings.installPath}/${installButton.dataset.gamePathTitle}`;
                 const tempPath = `${currentSettings.installPath}/temp`;
-
-                try {
-                    if (currentPlatform === 'windows') {
-                        // Check if directory exists first
-                        const checkResult = await Command.create('exec-win-powershell', [
-                            'Test-Path',
-                            '-Path', tempPath
-                        ]).execute();
-                        
-                        if (checkResult.stdout.trim() === 'True') {
-                            await Command.create('exec-win-powershell', [
-                                'Remove-Item',
-                                '-Path', tempPath,
-                                '-Recurse',
-                                '-Force'
-                            ]).execute();
-                        }
-                    } else {
-                        // macOS and Linux both use test -d for directory check
-                        const checkResult = await Command.create('exec-nix-unzip', [
-                            'test',
-                            '-d',
-                            tempPath
-                        ]).execute();
-                        
-                        if (checkResult.code === 0) {
-                            await Command.create('exec-nix-unzip', [
-                                'rm',
-                                '-rf',
-                                tempPath
-                            ]).execute();
-                        }
-                    }
-                } catch (e) {
-                    console.log("Error checking/removing temp directory:", e);
-                }
                 
                 await download(
                     installButton.dataset[downloadFile],
@@ -79,18 +43,14 @@ const { downloadUrlMac, downloadUrlWindows, downloadUrlLinux, gamePathTitle } = 
                     
                     result = await invoke('unzip_file', { 
                         zipPath: zipPath,
-                        extractPath: tempPath 
+                        extractPath: tempPath,
+                        finalPath: extractPath
                     });
 
                     console.log("zipPath", zipPath);
                     console.log("extractPath", extractPath);
                     console.log("result", result);
                     globalThis.presto.functions.showDownloadBar(false);
-
-                    await invoke('unzip_file', { 
-                        zipPath: zipPath,
-                        extractPath: extractPath 
-                    });
                 });
             }
         });

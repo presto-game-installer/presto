@@ -12,7 +12,8 @@ pub fn run() {
         .plugin(tauri_plugin_upload::init())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
-            unzip::unzip_file])
+            unzip::unzip_file
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
