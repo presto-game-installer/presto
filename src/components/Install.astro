@@ -18,7 +18,7 @@ romInstallDir } = Astro.props;
         ready();
     }
 
-    function ready () {
+    function ready() {
         console.log(globalThis.presto.currentSettings);
         let currentSettings = globalThis.presto.currentSettings;
 
@@ -73,6 +73,7 @@ romInstallDir } = Astro.props;
                         console.log("result", result);
 
                     }).finally(async () => {
+                        globalThis.presto.functions.setInstalled(installButton.dataset.gamePathTitle);
                         await globalThis.presto.functions.genericInvoke('cleanup_folder', { 
                             folder: `${tempPath}`
                         });
@@ -95,5 +96,4 @@ data-download-url-data-path={downloadUrlDataPath}
 data-data-file={dataFile}
 data-rom-install-path={romInstallPath}
 data-rom-install-dir={romInstallDir}
->
-Install</button>
+>Install</button>

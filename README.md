@@ -7,10 +7,12 @@
 - Can show a list of games
 - Can download, unzip & install a game
 - Will let you setup a configuration directory
+- Will install a game's data files
+- Will keep track of installed games
 
 #### TODO:
-- Need to add a way to check if the game is already installed
-- Need to download data files for the game
 - Need to do crossplatform testing
+- Need a way to uninstall games
+- Need a way to launch games
 
 Credit to https://github.com/manuelernestog/astrofy for the theme!

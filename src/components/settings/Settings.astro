@@ -10,14 +10,18 @@
     import { homeDir } from '@tauri-apps/api/path';
 
     //setup presto
-    globalThis.presto = {};
-    globalThis.presto.state = 'loading';
+    globalThis.presto = {
+      state: 'loading',
+      currentSettings: {
+        installed: []
+      },
+    };
 
     //setup settings and store
     globalThis.presto.currentSettings = {};
     globalThis.presto.store = await load('presto-data.json', { autoSave: true });
-    await globalThis.presto.store.get<{ value: string }>('settings').then(
-        (settings) => {
+    await globalThis.presto.store.get('settings').then(
+        (settings: { value: string } | null) => {
             if (settings != null) {
                 globalThis.presto.currentSettings = settings;
             }
@@ -25,7 +29,7 @@
     ).then(async () => {
         globalThis.presto.homeDirPath = await homeDir();
     }).then(async () => {
-        globalThis.presto.currentPlatform = await type();
+        globalThis.presto.currentPlatform = type();
     }).finally(() => {
         globalThis.presto.state = 'loaded';
         console.log("Settings loaded");
@@ -39,6 +43,18 @@
 
     //setup functions needed that interact with tauri
     globalThis.presto.functions = {}
+
+    globalThis.presto.functions.setInstalled = (game) => {
+        if(!globalThis.presto.currentSettings.installed) {
+            globalThis.presto.currentSettings.installed = [];
+        }
+        if(globalThis.presto.currentSettings.installed.includes(game)) {
+            return;
+        } else {
+            globalThis.presto.currentSettings.installed.push(game);
+            globalThis.presto.store.set('settings', globalThis.presto.currentSettings);
+        }
+    }
 
     globalThis.presto.functions.setBaseDirectory = async () => {
         const newInstallPath = await open({
@@ -62,7 +78,6 @@
         localPath,
         ({progress, total}) => {
             progressTotal += progress;
-            console.log(`Downloaded ${progressTotal} of ${total} bytes - ${(progressTotal / total) * 100}`);
             globalThis.presto.functions.updateProgress(downloadPath, (progressTotal / total) * 100);
         },)
     }
@@ -77,14 +92,20 @@
 
     // Update progress
     globalThis.presto.functions.updateProgress = (filename, progress) => {
-      const bar = document.getElementById('download-bar');
-      const percentage = document.getElementById('download-percentage');
+
       const filenameEl = document.getElementById('download-filename');
-      
-      if (bar && percentage && filenameEl) {
-        bar.style.width = `${progress}%`;
-        percentage.textContent = `${Math.round(progress)}%`;
+      if (filenameEl) {
         filenameEl.textContent = filename;
+      }
+      
+      if(progress) {
+        const bar = document.getElementById('download-bar');
+        const percentage = document.getElementById('download-percentage');
+
+        if (bar && percentage) {
+          bar.style.width = `${progress}%`;
+            percentage.textContent = `${Math.round(progress)}%`;
+        }
       }
     }
 </script>

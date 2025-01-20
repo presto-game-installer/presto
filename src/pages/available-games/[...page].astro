@@ -30,6 +30,8 @@ const { page } = Astro.props;
           <>
             <HorizontalCard
               title={game.data.title}
+              slugTitle={createSlug(game.data.title, game.slug)}
+              defaultHide={false}
               img={game.data.heroImage}
               desc={game.data.description}
               url={"/available-games/" + createSlug(game.data.title, game.slug)}
@@ -37,7 +39,6 @@ const { page } = Astro.props;
               badge={game.data.badge}
               tags={game.data.tags}
             />
-            <div class="divider my-0" />
           </>
         ))}
       </ul>

@@ -13,36 +13,57 @@ export async function getStaticPaths({ paginate }) {
 const { page } = Astro.props;
 ---
 
+<script is:inline>
+      if(globalThis.presto?.state != 'loaded') {
+        console.log("Settings not loaded yet");
+        addEventListener('presto:settings-loaded', () => {
+            ready();
+        });
+    } else {
+        ready();
+    }
+
+    function ready() {
+      if(globalThis.presto.currentSettings.installed && globalThis.presto.currentSettings.installed.length > 0) {
+        for(const gameSlugTitle of globalThis.presto.currentSettings.installed) {
+          const game = document.getElementById(gameSlugTitle);
+          if(game) {
+            game.classList.remove("hidden");
+          }
+        }
+        document.getElementById("games-list").classList.remove("hidden");
+      } else {
+        document.getElementById("no-games").classList.remove("hidden");
+      }
+    }
+</script>
+
 <BaseLayout title="Games" sideBarActiveItemID="game">
   <div class="mb-5">
     <div class="text-3xl w-full font-bold">Installed Games</div>
   </div>
 
-  {
-    page.data.length === 0 ? (
-      <div class="bg-base-200 border-l-4 border-secondary w-full p-4 min-w-full">
-        <p class="font-bold">Sorry!</p>
-        <p>There are no games to show at the moment. Check back later!</p>
-      </div>
-    ) : (
-      <ul>
-        {page.data.map((game) => (
-          <>
-            <HorizontalCard
-              title={game.data.title}
-              img={game.data.heroImage}
-              desc={game.data.description}
-              url={"/installed-games/" + createSlug(game.data.title, game.slug)}
-              target="_self"
-              badge={game.data.badge}
-              tags={game.data.tags}
-            />
-            <div class="divider my-0" />
-          </>
-        ))}
-      </ul>
-    )
-  }
+    <div id="no-games" class="hidden bg-base-200 border-l-4 border-secondary w-full p-4 min-w-full">
+      <p class="font-bold">Sorry!</p>
+      <p>There are no games to show at the moment. Go install something!</p>
+    </div>
+    <ul id="games-list" class="hidden">
+      {page.data.map((game) => (
+        <>
+          <HorizontalCard
+            title={game.data.title}
+            slugTitle={createSlug(game.data.title, game.slug)}
+            defaultHide={true}
+            img={game.data.heroImage}
+            desc={game.data.description}
+            url={"/installed-games/" + createSlug(game.data.title, game.slug)}
+            target="_self"
+            badge={game.data.badge}
+            tags={game.data.tags}
+          />
+        </>
+      ))}
+    </ul>
 
   <div class="flex justify-between">
     {

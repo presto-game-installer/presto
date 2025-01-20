@@ -1,11 +1,16 @@
 ---
-const { title, img, desc, url, badge, tags, target = "_blank" } = Astro.props;
+const { title, slugTitle, defaultHide, img, desc, url, badge, tags, target = "_blank" } = Astro.props;
 import { Image } from "astro:assets";
 const tag_url = url.split("/").slice(0, -1).join("/") + "/tag";
+let classList = "rounded-lg bg-base-100 hover:shadow-xl transition ease-in-out hover:scale-[102%]";
+if(defaultHide) {
+  classList += " hidden";
+}
 ---
 
 <div
-  class="rounded-lg bg-base-100 hover:shadow-xl transition ease-in-out hover:scale-[102%]"
+  id={slugTitle}
+  class={classList}
 >
   <a href={url} target={target}>
     <div class="hero-content flex-col md:flex-row">
@@ -40,4 +45,7 @@ const tag_url = url.split("/").slice(0, -1).join("/") + "/tag";
       </div>
     </div>
   </a>
+  <div class="divider my-0" />
 </div>
+
+
