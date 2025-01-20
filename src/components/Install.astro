@@ -6,7 +6,7 @@ const { downloadUrlMac, downloadUrlWindows, downloadUrlLinux, gamePathTitle } = 
     import { load } from '@tauri-apps/plugin-store';
     import { type } from '@tauri-apps/plugin-os';
     import { Command } from '@tauri-apps/plugin-shell';
-
+    import { invoke } from '@tauri-apps/api/core';
     const store = await load('presto-data.json', { autoSave: true });
     const currentSettings = await store.get<{ value: string }>('settings');
     // Detect OS
@@ -76,24 +76,21 @@ const { downloadUrlMac, downloadUrlWindows, downloadUrlLinux, gamePathTitle } = 
                 ).finally(async () => {
                     // Extract based on platform
                     let result;
-                    if (currentPlatform === 'windows') {
-                        result = await new Command('exec-win-powershell', [
-                            'Expand-Archive',
-                            '-Path', zipPath,
-                            '-DestinationPath', extractPath,
-                            '-Force'
-                        ]).execute();
-                    } else {
-                        // macOS and Linux both use unzip
-                        result = await new Command('exec-nix-unzip', [
-                            '-o', zipPath,
-                            '-d', extractPath
-                        ]).execute();
-                    }
+                    
+                    result = await invoke('unzip_file', { 
+                        zipPath: zipPath,
+                        extractPath: tempPath 
+                    });
+
                     console.log("zipPath", zipPath);
                     console.log("extractPath", extractPath);
                     console.log("result", result);
                     globalThis.presto.functions.showDownloadBar(false);
+
+                    await invoke('unzip_file', { 
+                        zipPath: zipPath,
+                        extractPath: extractPath 
+                    });
                 });
             }
         });
