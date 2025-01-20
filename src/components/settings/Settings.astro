@@ -4,9 +4,14 @@
     //global function loader/setter
     import { load } from '@tauri-apps/plugin-store';
     import { open } from "@tauri-apps/plugin-dialog";
+    import { download } from '@tauri-apps/plugin-upload';
+    import { type } from '@tauri-apps/plugin-os';
+    import { invoke } from '@tauri-apps/api/core';
+    import { homeDir } from '@tauri-apps/api/path';
 
     //setup presto
     globalThis.presto = {};
+    globalThis.presto.state = 'loading';
 
     //setup settings and store
     globalThis.presto.currentSettings = {};
@@ -16,13 +21,25 @@
             if (settings != null) {
                 globalThis.presto.currentSettings = settings;
             }
-            const event = new CustomEvent('presto:settings-loaded', {});
-            window.dispatchEvent(event);
         }
-    );
+    ).then(async () => {
+        globalThis.presto.homeDirPath = await homeDir();
+    }).then(async () => {
+        globalThis.presto.currentPlatform = await type();
+    }).finally(() => {
+        globalThis.presto.state = 'loaded';
+        console.log("Settings loaded");
+        const event = new CustomEvent('presto:settings-loaded', {});
+        window.dispatchEvent(event);
+    }).catch((error) => {
+        globalThis.presto.state = 'error';
+        console.error("Error loading settings", error);
+    });
+
 
     //setup functions needed that interact with tauri
     globalThis.presto.functions = {}
+
     globalThis.presto.functions.setBaseDirectory = async () => {
         const newInstallPath = await open({
             directory: true,
@@ -32,6 +49,22 @@
             globalThis.presto.currentSettings.installPath = newInstallPath;
             await globalThis.presto.store.set('settings', globalThis.presto.currentSettings);
         }
+    }
+
+    globalThis.presto.functions.genericInvoke = async (command, args) => {
+        return await invoke(command, args);
+    }
+
+    globalThis.presto.functions.downloadFile = async (downloadPath, localPath) => {
+      let progressTotal = 0;
+      await download(
+        downloadPath,
+        localPath,
+        ({progress, total}) => {
+            progressTotal += progress;
+            console.log(`Downloaded ${progressTotal} of ${total} bytes - ${(progressTotal / total) * 100}`);
+            globalThis.presto.functions.updateProgress(downloadPath, (progressTotal / total) * 100);
+        },)
     }
 
     // Show/hide download bar
