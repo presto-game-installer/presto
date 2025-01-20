@@ -13,8 +13,10 @@ const { title,
   linuxDownload,
   windowsDownload,
   macDownload,
-  dataDownload,
+  dataDownloadPath,
+  dataDownloadFile,
   romInstallPath,
+  romInstallDir,
   version,
   heroImage,
   badge,
@@ -68,8 +70,11 @@ const gamePathTitle = createSlug(title, "noslug");
         downloadUrlWindows={windowsDownload} 
         downloadUrlMac={macDownload} 
         downloadUrlLinux={linuxDownload} 
-        downloadUrlData={dataDownload}
-        romInstallPath={romInstallPath}/>
+        downloadUrlDataPath={dataDownloadPath}
+        dataFile={dataDownloadFile}
+        romInstallPath={romInstallPath}
+        romInstallDir={romInstallDir}
+        />
       <slot />
     </article>
   </main>

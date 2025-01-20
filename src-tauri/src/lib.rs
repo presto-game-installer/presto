@@ -1,4 +1,5 @@
 mod unzip;
+mod filemgmt;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -12,7 +13,10 @@ pub fn run() {
         .plugin(tauri_plugin_upload::init())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
-            unzip::unzip_file
+            unzip::unzip_file,
+            filemgmt::move_file,
+            filemgmt::cleanup_folder,
+            filemgmt::cleanup_file
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

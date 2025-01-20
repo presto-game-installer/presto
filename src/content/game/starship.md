@@ -12,8 +12,10 @@ lastUpdatedDate: "12/22/2024"
 linuxDownload: ""
 windowsDownload: "https://github.com/HarbourMasters/Starship/releases/download/v1.0.0/Starship-Centauri-Alfa-Windows.zip"
 macDownload: ""
-dataDownload: "https://archive.org/download/z64-pal-gc-debug/sf64-US-1.1ra.z64"
+dataDownloadPath: "https://archive.org/download/z64-pal-gc-debug/"
+dataDownloadFile: "sf64-US-1.1ra.z64"
 romInstallPath: ""
+romInstallDir: ""
 ---
 
 Info goes here

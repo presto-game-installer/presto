@@ -2,9 +2,11 @@
 const { downloadUrlMac, 
 downloadUrlWindows, 
 downloadUrlLinux, 
-downloadUrlData, 
+downloadUrlDataPath, 
+dataFile,
 gamePathTitle,
-romInstallPath } = Astro.props;
+romInstallPath,
+romInstallDir } = Astro.props;
 ---
 <script>
     import { download } from '@tauri-apps/plugin-upload';
@@ -12,8 +14,9 @@ romInstallPath } = Astro.props;
     import { type } from '@tauri-apps/plugin-os';
     import { Command } from '@tauri-apps/plugin-shell';
     import { invoke } from '@tauri-apps/api/core';
+    import { homeDir } from '@tauri-apps/api/path';
     const store = await load('presto-data.json', { autoSave: true });
-    const currentSettings = await store.get<{ value: string }>('settings');
+    const currentSettings = await store.get<{ installPath: string }>('settings');
     // Detect OS
     console.log(currentSettings);
     const currentPlatform = type();
@@ -23,6 +26,9 @@ romInstallPath } = Astro.props;
         'windows': 'downloadUrlWindows', 
         'linux': 'downloadUrlLinux'
     }[currentPlatform];
+
+    const homeDirPath = await homeDir();
+    console.log("homeDirPath", homeDirPath);
 
     const installButton = document.querySelector("button.install");
     if(installButton != null) {
@@ -38,11 +44,11 @@ romInstallPath } = Astro.props;
                     installButton.dataset[downloadFile],
                     zipPath,
                     ({progress, total}) => {
-                        console.log(`Downloaded ${progress} of ${total} bytes`);
-                        progressTotal = progress;
+                        progressTotal += progress;
+                        console.log(`Downloaded ${progressTotal} of ${total} bytes - ${(progressTotal / total) * 100}`);
                         globalThis.presto.functions.updateProgress(installButton.dataset.gamePathTitle + '.zip', (progressTotal / total) * 100);
                     },
-                ).finally(async () => {
+                ).then(async () => {
                     // Extract based on platform
                     let result;
                     
@@ -51,10 +57,41 @@ romInstallPath } = Astro.props;
                         extractPath: tempPath,
                         finalPath: extractPath
                     });
+                    globalThis.presto.functions.updateProgress('Installing', 100);
 
                     console.log("zipPath", zipPath);
                     console.log("extractPath", extractPath);
                     console.log("result", result);
+                }).then(async () => {
+                    console.log("download path", `${installButton.dataset['downloadUrlDataPath']}${installButton.dataset['dataFile']}`);
+                    console.log("temp path", `${tempPath}/${installButton.dataset['dataFile']}`);
+                    progressTotal = 0;
+                    await download(
+                    `${installButton.dataset['downloadUrlDataPath']}${installButton.dataset['dataFile']}`,
+                    `${tempPath}/${installButton.dataset['dataFile']}`,
+                    ({progress, total}) => {
+                        progressTotal += progress;
+                        console.log(`Downloaded ${progressTotal} of ${total} bytes - ${(progressTotal / total) * 100}`);
+                        globalThis.presto.functions.updateProgress('Data File', (progressTotal / total) * 100);
+                    },)
+                }).then(async () => {
+                    console.log("temp move file step", `${tempPath}/${installButton.dataset['dataFile']}`, tempPath);
+                    console.log("dest path",`${homeDirPath}${installButton.dataset['romInstallPath']}/${installButton.dataset['romInstallDir']}/${installButton.dataset['dataFile']}`)
+                    let result;
+                    
+                    result = await invoke('move_file', { 
+                        source: `${tempPath}/${installButton.dataset['dataFile']}`,
+                        destination: `${homeDirPath}${installButton.dataset['romInstallPath']}/${installButton.dataset['romInstallDir']}/${installButton.dataset['dataFile']}`,
+                    });
+                    console.log("result", result);
+
+                }).finally(async () => {
+                    await invoke('cleanup_folder', { 
+                        folder: `${tempPath}`
+                    });
+                    await invoke('cleanup_file', { 
+                        file: `${zipPath}`
+                    });
                     globalThis.presto.functions.showDownloadBar(false);
                 });
             }
@@ -66,6 +103,9 @@ data-game-path-title={gamePathTitle}
 data-download-url-mac={downloadUrlMac}
 data-download-url-windows={downloadUrlWindows}
 data-download-url-linux={downloadUrlLinux}
-data-download-url-data={downloadUrlData}
-data-rom-install-path={romInstallPath}>
+data-download-url-data-path={downloadUrlDataPath}
+data-data-file={dataFile}
+data-rom-install-path={romInstallPath}
+data-rom-install-dir={romInstallDir}
+>
 Install</button>

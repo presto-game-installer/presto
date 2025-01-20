@@ -1,26 +1,6 @@
 use std::path::PathBuf;
 use std::process::Command;
 
-async fn cleanup_temp_folder(temp_path: &str, zip_path: &str) -> Result<(), String> {
-    // Remove temp directory if it exists
-    if PathBuf::from(temp_path).exists() {
-        Command::new("rm")
-            .args(&["-rf", temp_path])
-            .output()
-            .map_err(|e| format!("Failed to cleanup temp directory: {}", e))?;
-    }
-    
-    // Remove zip file if it exists
-    if PathBuf::from(zip_path).exists() {
-        Command::new("rm")
-            .args(&["-f", zip_path])
-            .output()
-            .map_err(|e| format!("Failed to cleanup zip file: {}", e))?;
-    }
-    
-    Ok(())
-}
-
 #[tauri::command]
 pub async fn unzip_file(zip_path: String,
       extract_path: String,
@@ -65,11 +45,7 @@ pub async fn unzip_file(zip_path: String,
             }
         }
         Ok(return_path)
-    }.await;
-
-    // Always cleanup both temp folder and zip file
-    let _ = cleanup_temp_folder(&extract_path, &zip_path).await;
-    
+    }.await;    
     result
 }
 
@@ -130,14 +106,16 @@ async fn mount_and_copy_dmg(dmg_path: String, install_path: String) -> Result<St
     }
 
     // create the install directory if it doesn't exist
-    let copy_result = Command::new("mkdir")
-    .args([&install_path])
-    .output()
-    .map_err(|e| format!("Failed to create install directory for app: {}", e))?;
+    if !PathBuf::from(&install_path).exists() {
+        let copy_result = Command::new("mkdir")
+            .args([&install_path])
+            .output()
+            .map_err(|e| format!("Failed to create install directory for app: {}", e))?;
 
-    if !copy_result.status.success() {
-        return Err(format!("Failed to create install directory for app: {}", 
-            String::from_utf8_lossy(&copy_result.stderr)));
+        if !copy_result.status.success() {
+            return Err(format!("Failed to create install directory for app: {}", 
+                String::from_utf8_lossy(&copy_result.stderr)));
+        }
     }
 
     let final_path = install_path + "/" + app_path.split('/').last().unwrap();
