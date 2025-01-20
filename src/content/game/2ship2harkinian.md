@@ -1,6 +1,6 @@
 ---
 title: "2Ship2Harkinian"
-description: "A Recompilation of The Legend of Zelda: Major's Mask!"
+description: "A Recompilation of The Legend of Zelda: Majora's Mask!"
 releaseDate: "5/26/2024"
 homepageLink: ""
 githubLink: "https://github.com/HarbourMasters/2ship2harkinian"
