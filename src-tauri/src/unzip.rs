@@ -42,6 +42,27 @@ pub async fn unzip_file(zip_path: String,
                     Ok(path) => return_path = path,
                     Err(e) => return Err(e)
                 }
+            } else {
+                // create the install directory if it doesn't exist
+                if !PathBuf::from(&install_path).exists() {
+                    let copy_result = Command::new("mkdir")
+                        .args([&install_path])
+                        .output()
+                        .map_err(|e| format!("Failed to create install directory for app: {}", e))?;
+
+                    if !copy_result.status.success() {
+                        return Err(format!("Failed to create install directory for app: {}", 
+                            String::from_utf8_lossy(&copy_result.stderr)));
+                    }
+                }
+
+                let final_path = install_path + "/" + app_path.split('/').last().unwrap();
+
+                // Copy the .app to the install location
+                let copy_result = Command::new("cp")
+                    .args(&["-r", &app_path, &final_path])
+                    .output()
+                    .map_err(|e| format!("Failed to copy app: {}", e))?;
             }
         }
         Ok(return_path)
