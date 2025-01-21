@@ -5,6 +5,8 @@ const {
     platforms,
     gameData,
 } = Astro.props;
+
+const installButtonClasses = `btn install install-${gamePathTitle}`;
 ---
 <script is:inline>
     if(globalThis.presto?.state != 'loaded') {
@@ -17,9 +19,27 @@ const {
     }
 
     function ready() {
+        const installButton = document.querySelector("button.install");
+
         // get current settings
         let currentSettings = globalThis.presto.currentSettings;
         const installPath = currentSettings?.installPath
+
+        const gamePathTitle = installButton.dataset.gamePathTitle;
+        console.debug("gamePathTitle", gamePathTitle);
+        const gameVersion = installButton.dataset.gameVersion;
+        console.debug("gameVersion", gameVersion);
+
+        if(globalThis.presto.currentSettings.installed) {
+            const installedGames = Object.keys(globalThis.presto.currentSettings.installed);
+            if(installedGames.includes(gamePathTitle)) {
+                const gameInstallButton = document.querySelector(`.install-${gamePathTitle}`);
+                if(gameInstallButton) {
+                    gameInstallButton.classList.add("hidden");
+                    return;
+                }
+            }
+        }
 
         // Detect OS
         const currentPlatform = globalThis.presto.currentPlatform;
@@ -28,7 +48,6 @@ const {
         const homeDirPath = globalThis.presto.homeDirPath;
         
         // get platforms and game data
-        const installButton = document.querySelector("button.install");
         const platforms = JSON.parse(installButton.dataset.platforms);
         const gameData = JSON.parse(installButton.dataset.gameData);
 
@@ -39,10 +58,6 @@ const {
         const romInstallDir = platforms[currentPlatform].romInstallDir;
         console.debug("romInstallDir", romInstallDir);
         
-        const gamePathTitle = installButton.dataset.gamePathTitle;
-        console.debug("gamePathTitle", gamePathTitle);
-        const gameVersion = installButton.dataset.gameVersion;
-        console.debug("gameVersion", gameVersion);
         const dataPath = gameData.downloadPath;
         console.debug("dataPath", dataPath);
         const dataFile = gameData.downloadFile;
@@ -100,7 +115,7 @@ const {
         }
     }
 </script>
-<button class="btn install" 
+<button class={installButtonClasses} 
 data-game-path-title={gamePathTitle} 
 data-game-version={version}
 data-platforms={JSON.stringify(platforms)}
