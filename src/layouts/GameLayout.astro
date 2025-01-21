@@ -10,17 +10,12 @@ const { title,
   description,
   releaseDate,
   lastUpdatedDate,
-  linuxDownload,
-  windowsDownload,
-  macDownload,
-  dataDownloadPath,
-  dataDownloadFile,
-  romInstallPath,
-  romInstallDir,
   version,
   heroImage,
   badge,
-  tags = [] } = Astro.props;
+  tags = [],
+  platforms,
+  gameData } = Astro.props;
 import { Image } from "astro:assets";
 const formattedReleaseDate = new Date(releaseDate);
 const formattedLastUpdatedDate = new Date(lastUpdatedDate);
@@ -66,15 +61,12 @@ const gamePathTitle = createSlug(title, "noslug");
           )
       }
       <div class="divider my-2"></div>
-      <Install gamePathTitle={gamePathTitle}
-        downloadUrlWindows={windowsDownload} 
-        downloadUrlMac={macDownload} 
-        downloadUrlLinux={linuxDownload} 
-        downloadUrlDataPath={dataDownloadPath}
-        dataFile={dataDownloadFile}
-        romInstallPath={romInstallPath}
-        romInstallDir={romInstallDir}
-        />
+      <Install 
+        gamePathTitle={gamePathTitle}
+        version={version}
+        platforms={platforms}
+        gameData={gameData}
+      />
       <slot />
     </article>
   </main>

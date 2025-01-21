@@ -9,13 +9,21 @@ badge: "NEW"
 tags: ["Recompilation"]
 version: "1.0"
 lastUpdatedDate: "12/22/2024"
-linuxDownload: ""
-windowsDownload: "https://github.com/HarbourMasters/Starship/releases/download/v1.0.0/Starship-Centauri-Alfa-Windows.zip"
-macDownload: ""
-dataDownloadPath: "https://archive.org/download/z64-pal-gc-debug/"
-dataDownloadFile: "sf64-US-1.1ra.z64"
-romInstallPath: ""
-romInstallDir: ""
+gameData: {
+    downloadPath: "https://archive.org/download/z64-pal-gc-debug/",
+    downloadFile: "sf64-US-1.1ra.z64",
+}
+platforms: {
+    windows: {
+        downloadFile: "https://github.com/HarbourMasters/Starship/releases/download/v1.0.0/Starship-Centauri-Alfa-Windows.zip",
+    },
+    macos: {
+        downloadFile: "",
+    },
+    linux: {
+        downloadFile: "",
+    }
+}
 ---
 
 Info goes here

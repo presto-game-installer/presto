@@ -1,12 +1,10 @@
 ---
-const { downloadUrlMac, 
-downloadUrlWindows, 
-downloadUrlLinux, 
-downloadUrlDataPath, 
-dataFile,
-gamePathTitle,
-romInstallPath,
-romInstallDir } = Astro.props;
+const { 
+    gamePathTitle,
+    version,
+    platforms,
+    gameData,
+} = Astro.props;
 ---
 <script is:inline>
     if(globalThis.presto?.state != 'loaded') {
@@ -19,30 +17,45 @@ romInstallDir } = Astro.props;
     }
 
     function ready() {
-        console.log(globalThis.presto.currentSettings);
+        // get current settings
         let currentSettings = globalThis.presto.currentSettings;
+        const installPath = currentSettings?.installPath
 
         // Detect OS
         const currentPlatform = globalThis.presto.currentPlatform;
-        console.log("currentPlatform", currentPlatform);
-        const downloadFile = {
-            'macos': 'downloadUrlMac',
-            'windows': 'downloadUrlWindows', 
-            'linux': 'downloadUrlLinux'
-        }[currentPlatform];
 
+        // get home dir path
         const homeDirPath = globalThis.presto.homeDirPath;
-        console.log("homeDirPath", homeDirPath);
-
+        
+        // get platforms and game data
         const installButton = document.querySelector("button.install");
+        const platforms = JSON.parse(installButton.dataset.platforms);
+        const gameData = JSON.parse(installButton.dataset.gameData);
+
+        const downloadFile = platforms[currentPlatform].downloadFile;
+        console.debug("downloadFile", downloadFile);
+        const romInstallPath = platforms[currentPlatform].romInstallPath;
+        console.debug("romInstallPath", romInstallPath);
+        const romInstallDir = platforms[currentPlatform].romInstallDir;
+        console.debug("romInstallDir", romInstallDir);
+        
+        const gamePathTitle = installButton.dataset.gamePathTitle;
+        console.debug("gamePathTitle", gamePathTitle);
+        const gameVersion = installButton.dataset.gameVersion;
+        console.debug("gameVersion", gameVersion);
+        const dataPath = gameData.downloadPath;
+        console.debug("dataPath", dataPath);
+        const dataFile = gameData.downloadFile;
+        console.debug("dataFile", dataFile);
+        
         if(installButton != null) {
             installButton.addEventListener("click", async () => {
-                if (currentSettings && currentSettings.installPath) {
+                if (currentSettings && installPath) {
                     globalThis.presto.functions.showDownloadBar(true);
-                    const zipPath = `${currentSettings.installPath}/${installButton.dataset.gamePathTitle}.zip`;
-                    const extractPath = `${currentSettings.installPath}/${installButton.dataset.gamePathTitle}`;
-                    const tempPath = `${currentSettings.installPath}/temp`;
-                    await globalThis.presto.functions.downloadFile(installButton.dataset[downloadFile], zipPath)
+                    const zipPath = `${installPath}/${gamePathTitle}.zip`;
+                    const extractPath = `${installPath}/${gamePathTitle}`;
+                    const tempPath = `${installPath}/temp`;
+                    await globalThis.presto.functions.downloadFile(downloadFile, zipPath)
                     .then(async () => {
                         // Extract based on platform
                         let result;
@@ -54,26 +67,26 @@ romInstallDir } = Astro.props;
                         });
                         globalThis.presto.functions.updateProgress('Installing', 100);
 
-                        console.log("zipPath", zipPath);
-                        console.log("extractPath", extractPath);
-                        console.log("result", result);
+                        console.debug("zipPath", zipPath);
+                        console.debug("extractPath", extractPath);
+                        console.debug("result", result);
                     }).then(async () => {
-                        console.log("download path", `${installButton.dataset['downloadUrlDataPath']}${installButton.dataset['dataFile']}`);
-                        console.log("temp path", `${tempPath}/${installButton.dataset['dataFile']}`);
-                        await globalThis.presto.functions.downloadFile(`${installButton.dataset['downloadUrlDataPath']}${installButton.dataset['dataFile']}`,`${tempPath}/${installButton.dataset['dataFile']}`)
+                        console.debug("download path", `${dataPath}${dataFile}`);
+                        console.debug("temp path", `${tempPath}/${dataFile}`);
+                        await globalThis.presto.functions.downloadFile(`${dataPath}${dataFile}`,`${tempPath}/${dataFile}`)
                     }).then(async () => {
-                        console.log("temp move file step", `${tempPath}/${installButton.dataset['dataFile']}`, tempPath);
-                        console.log("dest path",`${homeDirPath}${installButton.dataset['romInstallPath']}/${installButton.dataset['romInstallDir']}/${installButton.dataset['dataFile']}`)
+                        console.debug("temp move file step", `${tempPath}/${dataFile}`, tempPath);
+                        console.debug("dest path",`${homeDirPath}${romInstallPath}/${romInstallDir}/${dataFile}`)
                         let result;
                         
                         result = await globalThis.presto.functions.genericInvoke('move_file', { 
-                            source: `${tempPath}/${installButton.dataset['dataFile']}`,
-                            destination: `${homeDirPath}${installButton.dataset['romInstallPath']}/${installButton.dataset['romInstallDir']}/${installButton.dataset['dataFile']}`,
+                            source: `${tempPath}/${dataFile}`,
+                            destination: `${homeDirPath}${romInstallPath}/${romInstallDir}/${dataFile}`,
                         });
-                        console.log("result", result);
+                        console.debug("result", result);
 
                     }).finally(async () => {
-                        globalThis.presto.functions.setInstalled(installButton.dataset.gamePathTitle);
+                        globalThis.presto.functions.setInstalled(gamePathTitle, gameVersion);
                         await globalThis.presto.functions.genericInvoke('cleanup_folder', { 
                             folder: `${tempPath}`
                         });
@@ -89,11 +102,7 @@ romInstallDir } = Astro.props;
 </script>
 <button class="btn install" 
 data-game-path-title={gamePathTitle} 
-data-download-url-mac={downloadUrlMac}
-data-download-url-windows={downloadUrlWindows}
-data-download-url-linux={downloadUrlLinux}
-data-download-url-data-path={downloadUrlDataPath}
-data-data-file={dataFile}
-data-rom-install-path={romInstallPath}
-data-rom-install-dir={romInstallDir}
+data-game-version={version}
+data-platforms={JSON.stringify(platforms)}
+data-game-data={JSON.stringify(gameData)}
 >Install</button>

@@ -8,13 +8,23 @@ heroImage: "/games/2s2h.avif"
 tags: ["Recompilation"]
 version: "1.1.2"
 lastUpdatedDate: "12/19/2024"
-linuxDownload: "https://github.com/HarbourMasters/2ship2harkinian/releases/download/1.1.2/2Ship-Satoko-Charlie-Linux.zip"
-windowsDownload: "https://github.com/HarbourMasters/2ship2harkinian/releases/download/1.1.2/2Ship-Satoko-Charlie-Win64.zip"
-macDownload: "https://github.com/HarbourMasters/2ship2harkinian/releases/download/1.1.2/2Ship-Satoko-Charlie-Mac.zip"
-dataDownloadPath: "https://archive.org/download/z64-pal-gc-debug/"
-dataDownloadFile: "z64mm-NA-GC.z64"
-romInstallPath: "/Library/Application Support/"
-romInstallDir: "com.2ship2harkinian.2s2h"
+gameData: {
+    downloadPath: "https://archive.org/download/z64-pal-gc-debug/",
+    downloadFile: "z64mm-NA-GC.z64",
+}
+platforms: {
+    linux: {
+        downloadFile: "https://github.com/HarbourMasters/2ship2harkinian/releases/download/1.1.2/2Ship-Satoko-Charlie-Linux.zip",
+    },
+    windows: {
+        downloadFile: "https://github.com/HarbourMasters/2ship2harkinian/releases/download/1.1.2/2Ship-Satoko-Charlie-Win64.zip",
+    },
+    macos: {
+        downloadFile: "https://github.com/HarbourMasters/2ship2harkinian/releases/download/1.1.2/2Ship-Satoko-Charlie-Mac.zip",
+        romInstallPath: "/Library/Application Support/",
+        romInstallDir: "com.2ship2harkinian.2s2h",
+    }
+}
 ---
 
 Info goes here

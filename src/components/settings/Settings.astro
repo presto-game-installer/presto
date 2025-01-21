@@ -13,7 +13,7 @@
     globalThis.presto = {
       state: 'loading',
       currentSettings: {
-        installed: []
+        installed: {}
       },
     };
 
@@ -44,14 +44,15 @@
     //setup functions needed that interact with tauri
     globalThis.presto.functions = {}
 
-    globalThis.presto.functions.setInstalled = (game) => {
+    globalThis.presto.functions.setInstalled = (game, version) => {
         if(!globalThis.presto.currentSettings.installed) {
-            globalThis.presto.currentSettings.installed = [];
+            globalThis.presto.currentSettings.installed = {};
         }
-        if(globalThis.presto.currentSettings.installed.includes(game)) {
+        if(globalThis.presto.currentSettings.installed[game]) {
             return;
         } else {
-            globalThis.presto.currentSettings.installed.push(game);
+            globalThis.presto.currentSettings.installed[game] = {};
+            globalThis.presto.currentSettings.installed[game].version = version;
             globalThis.presto.store.set('settings', globalThis.presto.currentSettings);
         }
     }

@@ -24,8 +24,9 @@ const { page } = Astro.props;
     }
 
     function ready() {
-      if(globalThis.presto.currentSettings.installed && globalThis.presto.currentSettings.installed.length > 0) {
-        for(const gameSlugTitle of globalThis.presto.currentSettings.installed) {
+      if(globalThis.presto.currentSettings.installed) {
+        const installedGames = Object.keys(globalThis.presto.currentSettings.installed);
+        for(const gameSlugTitle of installedGames) {
           const game = document.getElementById(gameSlugTitle);
           if(game) {
             game.classList.remove("hidden");
