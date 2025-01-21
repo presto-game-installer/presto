@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "Presto"
-version = "0.0.3"
+version = "0.0.4"
 dependencies = [
  "pretty_env_logger",
  "serde",
