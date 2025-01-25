@@ -13,11 +13,22 @@ pub async fn move_file(source: String, destination: String) -> Result<(), String
         }
     }
 
-    // Move the file
-    Command::new("mv")
-        .args(&[&source, &destination])
-        .output()
-        .map_err(|e| format!("Failed to move file: {}", e))?;
+    // Move the file based on platform
+    #[cfg(any(target_os = "linux", target_os = "macos"))]
+    {
+        Command::new("mv")
+            .args(&[&source, &destination])
+            .output()
+            .map_err(|e| format!("Failed to move file: {}", e))?;
+    }
+    
+    #[cfg(target_os = "windows")]
+    {
+        Command::new("cmd")
+            .args(&["/C", "move", &source, &destination])
+            .output()
+            .map_err(|e| format!("Failed to move file: {}", e))?;
+    }
 
     Ok(())
 }
@@ -26,10 +37,21 @@ pub async fn move_file(source: String, destination: String) -> Result<(), String
 pub async fn cleanup_folder(folder: &str) -> Result<(), String> {
     // Remove temp directory if it exists
     if PathBuf::from(folder).exists() {
-        Command::new("rm")
-            .args(&["-rf", folder])
-            .output()
-            .map_err(|e| format!("Failed to cleanup directory: {}", e))?;
+        #[cfg(any(target_os = "linux", target_os = "macos"))]
+        {
+            Command::new("rm")
+                .args(&["-rf", folder])
+                .output()
+                .map_err(|e| format!("Failed to cleanup directory: {}", e))?;
+        }
+
+        #[cfg(target_os = "windows")]
+        {
+            Command::new("cmd")
+                .args(&["/C", "rmdir", "/S", "/Q", folder])
+                .output()
+                .map_err(|e| format!("Failed to cleanup directory: {}", e))?;
+        }
     }
     
     Ok(())
@@ -39,10 +61,21 @@ pub async fn cleanup_folder(folder: &str) -> Result<(), String> {
 pub async fn cleanup_file(file: &str) -> Result<(), String> {
     // Remove zip file if it exists
     if PathBuf::from(file).exists() {
-        Command::new("rm")
-            .args(&["-f", file])
-            .output()
-            .map_err(|e| format!("Failed to cleanup file: {}", e))?;
+        #[cfg(any(target_os = "linux", target_os = "macos"))]
+        {
+            Command::new("rm")
+                .args(&["-f", file])
+                .output()
+                .map_err(|e| format!("Failed to cleanup file: {}", e))?;
+        }
+
+        #[cfg(target_os = "windows")]
+        {
+            Command::new("cmd")
+                .args(&["/C", "del", "/F", "/Q", file])
+                .output()
+                .map_err(|e| format!("Failed to cleanup file: {}", e))?;
+        }
     }
     
     Ok(())

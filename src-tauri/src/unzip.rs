@@ -16,7 +16,8 @@ pub async fn unzip_file(zip_path: String,
     }
 
     let result = async {
-        if cfg!(windows) {
+        #[cfg(target_os = "windows")]
+        {
             Command::new("powershell")
                 .args(&[
                     "Expand-Archive",
@@ -26,7 +27,29 @@ pub async fn unzip_file(zip_path: String,
                 ])
                 .output()
                 .map_err(|e| format!("Failed to extract on Windows: {}", e))?;
-        } else {
+
+            // create the install directory if it doesn't exist
+            if !PathBuf::from(&final_path).exists() {
+                let copy_result = Command::new("cmd")
+                    .args(&["/C", "mkdir", &final_path])
+                    .output()
+                    .map_err(|e| format!("Failed to create install directory for app: {}", e))?;
+
+                if !copy_result.status.success() {
+                    return Err(format!("Failed to create install directory for app: {}", 
+                        String::from_utf8_lossy(&copy_result.stderr)));
+                }
+            }
+
+            // Copy files using xcopy (more suitable for directories than copy)
+            let copy_result = Command::new("cmd")
+                .args(&["/C", "xcopy", &extract_path, &final_path, "/E", "/I", "/H", "/Y"])
+                .output()
+                .map_err(|e| format!("Failed to copy app: {}", e))?;
+        }
+
+        #[cfg(target_os = "macos")]
+        {
             Command::new("unzip")
                 .args(&[
                     "-o",
@@ -37,33 +60,41 @@ pub async fn unzip_file(zip_path: String,
                 .output()
                 .map_err(|e| format!("Failed to extract: {}", e))?;
 
-            if cfg!(target_os = "macos") {
-                match mount_and_copy_dmg(extract_path.clone(), final_path).await {
-                    Ok(path) => return_path = path,
-                    Err(e) => return Err(e)
-                }
-            } else {
-                // create the install directory if it doesn't exist
-                if !PathBuf::from(&install_path).exists() {
-                    let copy_result = Command::new("mkdir")
-                        .args([&install_path])
-                        .output()
-                        .map_err(|e| format!("Failed to create install directory for app: {}", e))?;
-
-                    if !copy_result.status.success() {
-                        return Err(format!("Failed to create install directory for app: {}", 
-                            String::from_utf8_lossy(&copy_result.stderr)));
-                    }
-                }
-
-                let final_path = install_path + "/" + app_path.split('/').last().unwrap();
-
-                // Copy the .app to the install location
-                let copy_result = Command::new("cp")
-                    .args(&["-r", &app_path, &final_path])
-                    .output()
-                    .map_err(|e| format!("Failed to copy app: {}", e))?;
+            match mount_and_copy_dmg(extract_path.clone(), final_path).await {
+                Ok(path) => return_path = path,
+                Err(e) => return Err(e)
             }
+        }
+
+        #[cfg(target_os = "linux")]
+        {
+            Command::new("unzip")
+                .args(&[
+                    "-o",
+                    zip_path_buf.to_str().unwrap(),
+                    "-d",
+                    extract_path_temp.to_str().unwrap()
+                ])
+                .output()
+                .map_err(|e| format!("Failed to extract: {}", e))?;
+
+            // create the install directory if it doesn't exist
+            if !PathBuf::from(&final_path).exists() {
+                let copy_result = Command::new("mkdir")
+                    .args([&final_path])
+                    .output()
+                    .map_err(|e| format!("Failed to create install directory for app: {}", e))?;
+
+                if !copy_result.status.success() {
+                    return Err(format!("Failed to create install directory for app: {}", 
+                        String::from_utf8_lossy(&copy_result.stderr)));
+                }
+            }
+
+            let copy_result = Command::new("cp")
+                .args(&["-r", &extract_path, &final_path])
+                .output()
+                .map_err(|e| format!("Failed to copy app: {}", e))?;
         }
         Ok(return_path)
     }.await;    
