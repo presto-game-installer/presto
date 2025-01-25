@@ -24,8 +24,11 @@ pub async fn move_file(source: String, destination: String) -> Result<(), String
     
     #[cfg(target_os = "windows")]
     {
+        let source = convert_to_windows_path(&source);
+        let destination = convert_to_windows_path(&destination);
+        
         Command::new("cmd")
-            .args(&["/C", "move", &source, &destination])
+            .args(&["/C", "move", "/Y", &source, &destination])
             .output()
             .map_err(|e| format!("Failed to move file: {}", e))?;
     }
@@ -47,8 +50,13 @@ pub async fn cleanup_folder(folder: &str) -> Result<(), String> {
 
         #[cfg(target_os = "windows")]
         {
-            Command::new("cmd")
-                .args(&["/C", "rmdir", "/S", "/Q", folder])
+            let folder = convert_to_windows_path(folder);
+            
+            Command::new("powershell")
+                .args(&[
+                    "-Command",
+                    &format!("Remove-Item -Path '{}' -Recurse -Force", folder)
+                ])
                 .output()
                 .map_err(|e| format!("Failed to cleanup directory: {}", e))?;
         }
@@ -71,12 +79,25 @@ pub async fn cleanup_file(file: &str) -> Result<(), String> {
 
         #[cfg(target_os = "windows")]
         {
-            Command::new("cmd")
-                .args(&["/C", "del", "/F", "/Q", file])
+            Command::new("powershell")
+                .args(&[
+                    "-Command",
+                    &format!("Remove-Item -Path '{}' -Force", file)
+                ])
                 .output()
                 .map_err(|e| format!("Failed to cleanup file: {}", e))?;
         }
     }
     
     Ok(())
+}
+
+#[cfg(target_os = "windows")]
+pub fn convert_to_windows_path(path: &str) -> String {
+    path.replace("/", "\\")
+}
+
+pub fn create_directory(path: &PathBuf) -> Result<(), String> {
+    std::fs::create_dir_all(path)
+        .map_err(|e| format!("Failed to create directory: {}", e))
 }

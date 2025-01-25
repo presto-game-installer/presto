@@ -72,14 +72,14 @@
         return await invoke(command, args);
     }
 
-    globalThis.presto.functions.downloadFile = async (downloadPath, localPath) => {
+    globalThis.presto.functions.downloadFile = async (downloadUrl, localPath) => {
       let progressTotal = 0;
       await download(
-        downloadPath,
+        downloadUrl,
         localPath,
         ({progress, total}) => {
             progressTotal += progress;
-            globalThis.presto.functions.updateProgress(downloadPath, (progressTotal / total) * 100);
+            globalThis.presto.functions.updateProgress(downloadUrl, (progressTotal / total) * 100);
         },)
     }
 

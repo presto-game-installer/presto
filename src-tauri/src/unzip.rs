@@ -1,51 +1,45 @@
 use std::path::PathBuf;
 use std::process::Command;
+use crate::filemgmt::create_directory;
+
+#[cfg(target_os = "windows")]
+use crate::filemgmt::convert_to_windows_path;
 
 #[tauri::command]
 pub async fn unzip_file(zip_path: String,
-      extract_path: String,
+      temp_path: String,
       final_path: String) -> Result<String, String> {
-    let zip_path_buf = PathBuf::from(zip_path.clone());
-    let extract_path_temp = PathBuf::from(extract_path.clone());
+
+    let temp_path_buf = PathBuf::from(temp_path.clone());
+    let final_path_buf = PathBuf::from(final_path.clone());
     let mut return_path = String::new();
 
     // Create extraction directory if it doesn't exist
-    if !extract_path_temp.exists() {
-        std::fs::create_dir_all(&extract_path_temp)
-            .map_err(|e| format!("Failed to create extraction directory: {}", e))?;
+    if !temp_path_buf.exists() {
+        create_directory(&temp_path_buf)?;
+    }
+
+    if !final_path_buf.exists() {
+        create_directory(&final_path_buf)?;
     }
 
     let result = async {
         #[cfg(target_os = "windows")]
         {
+            let zip_path = convert_to_windows_path(&zip_path);
+            let final_path = convert_to_windows_path(&final_path);
+            // Extract directly to the final path
             Command::new("powershell")
                 .args(&[
-                    "Expand-Archive",
-                    "-Path", zip_path_buf.to_str().unwrap(),
-                    "-DestinationPath", extract_path_temp.to_str().unwrap(),
-                    "-Force"
+                    "-Command",
+                    &format!(
+                        "Expand-Archive -Path '{}' -DestinationPath '{}' -Force",
+                        zip_path,
+                        final_path
+                    )
                 ])
                 .output()
                 .map_err(|e| format!("Failed to extract on Windows: {}", e))?;
-
-            // create the install directory if it doesn't exist
-            if !PathBuf::from(&final_path).exists() {
-                let copy_result = Command::new("cmd")
-                    .args(&["/C", "mkdir", &final_path])
-                    .output()
-                    .map_err(|e| format!("Failed to create install directory for app: {}", e))?;
-
-                if !copy_result.status.success() {
-                    return Err(format!("Failed to create install directory for app: {}", 
-                        String::from_utf8_lossy(&copy_result.stderr)));
-                }
-            }
-
-            // Copy files using xcopy (more suitable for directories than copy)
-            let copy_result = Command::new("cmd")
-                .args(&["/C", "xcopy", &extract_path, &final_path, "/E", "/I", "/H", "/Y"])
-                .output()
-                .map_err(|e| format!("Failed to copy app: {}", e))?;
         }
 
         #[cfg(target_os = "macos")]
@@ -53,14 +47,14 @@ pub async fn unzip_file(zip_path: String,
             Command::new("unzip")
                 .args(&[
                     "-o",
-                    zip_path_buf.to_str().unwrap(),
+                    &zip_path,
                     "-d",
-                    extract_path_temp.to_str().unwrap()
+                    &temp_path
                 ])
                 .output()
                 .map_err(|e| format!("Failed to extract: {}", e))?;
 
-            match mount_and_copy_dmg(extract_path.clone(), final_path).await {
+            match mount_and_copy_dmg(temp_path.clone(), final_path).await {
                 Ok(path) => return_path = path,
                 Err(e) => return Err(e)
             }
@@ -71,37 +65,19 @@ pub async fn unzip_file(zip_path: String,
             Command::new("unzip")
                 .args(&[
                     "-o",
-                    zip_path_buf.to_str().unwrap(),
+                    &zip_path,
                     "-d",
-                    extract_path_temp.to_str().unwrap()
+                    &final_path
                 ])
                 .output()
                 .map_err(|e| format!("Failed to extract: {}", e))?;
-
-            // create the install directory if it doesn't exist
-            if !PathBuf::from(&final_path).exists() {
-                let copy_result = Command::new("mkdir")
-                    .args([&final_path])
-                    .output()
-                    .map_err(|e| format!("Failed to create install directory for app: {}", e))?;
-
-                if !copy_result.status.success() {
-                    return Err(format!("Failed to create install directory for app: {}", 
-                        String::from_utf8_lossy(&copy_result.stderr)));
-                }
-            }
-
-            let copy_result = Command::new("cp")
-                .args(&["-r", &extract_path, &final_path])
-                .output()
-                .map_err(|e| format!("Failed to copy app: {}", e))?;
         }
         Ok(return_path)
     }.await;    
     result
 }
 
-#[tauri::command]
+#[cfg(target_os = "macos")]
 async fn mount_and_copy_dmg(dmg_path: String, install_path: String) -> Result<String, String> {
     // Find the .dmg file
     let dmg_file = Command::new("find")

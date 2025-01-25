@@ -58,18 +58,19 @@ const installButtonClasses = `btn install install-${gamePathTitle}`;
         const romInstallDir = platforms[currentPlatform].romInstallDir;
         console.debug("romInstallDir", romInstallDir);
         
-        const dataPath = gameData.downloadPath;
-        console.debug("dataPath", dataPath);
-        const dataFile = gameData.downloadFile;
-        console.debug("dataFile", dataFile);
+        const dataDownloadPath = gameData.downloadPath;
+        console.debug("dataDownloadPath", dataDownloadPath);
+        const dataDownloadFile = gameData.downloadFile;
+        console.debug("dataDownloadFile", dataDownloadFile);
         
         if(installButton != null) {
             installButton.addEventListener("click", async () => {
                 if (currentSettings && installPath) {
                     globalThis.presto.functions.showDownloadBar(true);
                     const zipPath = `${installPath}/${gamePathTitle}.zip`;
-                    const extractPath = `${installPath}/${gamePathTitle}`;
+                    const finalPath = `${installPath}/${gamePathTitle}`;
                     const tempPath = `${installPath}/temp`;
+                    
                     await globalThis.presto.functions.downloadFile(downloadFile, zipPath)
                     .then(async () => {
                         // Extract based on platform
@@ -77,38 +78,72 @@ const installButtonClasses = `btn install install-${gamePathTitle}`;
                         
                         result = await globalThis.presto.functions.genericInvoke('unzip_file', { 
                             zipPath: zipPath,
-                            extractPath: tempPath,
-                            finalPath: extractPath
+                            tempPath: tempPath,
+                            finalPath: finalPath
                         });
                         globalThis.presto.functions.updateProgress('Installing', 100);
 
                         console.debug("zipPath", zipPath);
-                        console.debug("extractPath", extractPath);
+                        console.debug("finalPath", finalPath);
                         console.debug("result", result);
-                    }).then(async () => {
-                        console.debug("download path", `${dataPath}${dataFile}`);
-                        console.debug("temp path", `${tempPath}/${dataFile}`);
-                        await globalThis.presto.functions.downloadFile(`${dataPath}${dataFile}`,`${tempPath}/${dataFile}`)
-                    }).then(async () => {
-                        console.debug("temp move file step", `${tempPath}/${dataFile}`, tempPath);
-                        console.debug("dest path",`${homeDirPath}${romInstallPath}/${romInstallDir}/${dataFile}`)
-                        let result;
-                        
-                        result = await globalThis.presto.functions.genericInvoke('move_file', { 
-                            source: `${tempPath}/${dataFile}`,
-                            destination: `${homeDirPath}${romInstallPath}/${romInstallDir}/${dataFile}`,
-                        });
-                        console.debug("result", result);
-
-                    }).finally(async () => {
+                    })
+                    .catch((error) => {
+                        console.error("Failed to extract file:", error);
+                        throw error; // Re-throw to trigger the finally block
+                    })
+                    .then(async () => {
+                        console.debug("download path", `${dataDownloadPath}${dataDownloadFile}`);
+                        console.debug("temp path", `${tempPath}/${dataDownloadFile}`);
+                        // If we're on windows or linux, we can download the data file to the final path
+                        // If we're on macos, we need to move the file to the temp path and move it later
+                        let destPath = `${finalPath}/${dataDownloadFile}`;
+                        if(currentPlatform == 'macos') {
+                            destPath = `${tempPath}/${dataDownloadFile}`;
+                        }
+                        await globalThis.presto.functions.downloadFile(`${dataDownloadPath}${dataDownloadFile}`,destPath);
+                    })
+                    .catch((error) => {
+                        console.error("Failed to download data file:", error);
+                        throw error;
+                    })
+                    .then(async () => {
+                        if(currentPlatform === 'macos') {
+                            console.debug("temp move file step", `${tempPath}/${dataDownloadFile}`, tempPath);
+                            console.debug("dest path",`${homeDirPath}${romInstallPath}/${romInstallDir}/${dataDownloadFile}`)
+                            let result;
+                            
+                            result = await globalThis.presto.functions.genericInvoke('move_file', { 
+                                source: `${tempPath}/${dataDownloadFile}`,
+                                destination: `${homeDirPath}${romInstallPath}/${romInstallDir}/${dataDownloadFile}`,
+                            });
+                            console.debug("result", result);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Failed to move file:", error);
+                        throw error;
+                    })
+                    .then(async () => {
+                        // If we got here, all previous operations were successful
                         globalThis.presto.functions.setInstalled(gamePathTitle, gameVersion);
-                        await globalThis.presto.functions.genericInvoke('cleanup_folder', { 
-                            folder: `${tempPath}`
-                        });
-                        await globalThis.presto.functions.genericInvoke('cleanup_file', { 
-                            file: `${zipPath}`
-                        });
-                        globalThis.presto.functions.showDownloadBar(false);
+                    })
+                    .catch((error) => {
+                        console.error("Installation failed:", error);
+                        throw error;
+                    })
+                    .finally(async () => {
+                        try {
+                            await globalThis.presto.functions.genericInvoke('cleanup_folder', { 
+                                folder: `${tempPath}`
+                            });
+                            await globalThis.presto.functions.genericInvoke('cleanup_file', { 
+                                file: `${zipPath}`
+                            });
+                        } catch (error) {
+                            console.error("Cleanup failed:", error);
+                        } finally {
+                            globalThis.presto.functions.showDownloadBar(false);
+                        }
                     });
                 }
             });
