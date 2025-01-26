@@ -4,7 +4,7 @@ description: "A Recompilation of Starfox 64!"
 releaseDate: "12/22/2024"
 homepageLink: ""
 githubLink: "https://github.com/HarbourMasters/Starship"
-heroImage: "/games/starship.avif"
+heroImage: "/games/starship.png"
 badge: "NEW"
 tags: ["Recompilation"]
 version: "1.0"
