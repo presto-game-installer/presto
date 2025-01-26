@@ -30,6 +30,7 @@ const { page } = Astro.props;
           const game = document.getElementById(gameSlugTitle);
           if(game) {
             game.classList.remove("hidden");
+            game.querySelector("a").removeAttribute("inert");
           }
         }
         document.getElementById("games-list").classList.remove("hidden");

@@ -6,7 +6,7 @@ const {
     gameData,
 } = Astro.props;
 
-const installButtonClasses = `btn install install-${gamePathTitle}`;
+const installButtonClasses = `btn hidden install install-${gamePathTitle}`;
 ---
 <script is:inline>
     if(globalThis.presto?.state != 'loaded') {
@@ -32,11 +32,11 @@ const installButtonClasses = `btn install install-${gamePathTitle}`;
 
         if(globalThis.presto.currentSettings.installed) {
             const installedGames = Object.keys(globalThis.presto.currentSettings.installed);
-            if(installedGames.includes(gamePathTitle)) {
+            if(!installedGames.includes(gamePathTitle)) {
                 const gameInstallButton = document.querySelector(`.install-${gamePathTitle}`);
                 if(gameInstallButton) {
-                    gameInstallButton.classList.add("hidden");
-                    return;
+                    gameInstallButton.classList.remove("hidden");
+                    gameInstallButton.removeAttribute("inert");
                 }
             }
         }
@@ -150,7 +150,7 @@ const installButtonClasses = `btn install install-${gamePathTitle}`;
         }
     }
 </script>
-<button class={installButtonClasses} 
+<button inert class={installButtonClasses} 
 data-game-path-title={gamePathTitle} 
 data-game-version={version}
 data-platforms={JSON.stringify(platforms)}

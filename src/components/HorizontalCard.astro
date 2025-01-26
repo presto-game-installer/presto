@@ -3,16 +3,19 @@ const { title, slugTitle, defaultHide, img, desc, url, badge, tags, target = "_b
 import { Image } from "astro:assets";
 const tag_url = url.split("/").slice(0, -1).join("/") + "/tag";
 let classList = "rounded-lg bg-base-100 hover:shadow-xl transition ease-in-out hover:scale-[102%]";
+let inert = "";
 if(defaultHide) {
   classList += " hidden";
+  inert = "inert";
 }
+
 ---
 
 <div
   id={slugTitle}
   class={classList}
 >
-  <a href={url} target={target}>
+  <a href={url} {inert}="" target={target}>
     <div class="hero-content flex-col md:flex-row">
       {
         img && (
@@ -36,9 +39,9 @@ if(defaultHide) {
           {
             tags &&
               tags.map((tag) => (
-                <a href={`${tag_url}/${tag}`} class="badge badge-outline">
+                <span href={`${tag_url}/${tag}`} class="badge badge-outline">
                   {tag}
-                </a>
+                </span>
               ))
           }
         </div>
