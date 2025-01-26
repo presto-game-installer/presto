@@ -16,4 +16,6 @@
 - Need a way to uninstall games
 - Need a way to launch games
 
-Credit to https://github.com/manuelernestog/astrofy for the theme!
+Credit to :
+- https://github.com/manuelernestog/astrofy for the theme!
+- https://github.com/alvaromontoro/gamecontroller.js for the game controller library!
