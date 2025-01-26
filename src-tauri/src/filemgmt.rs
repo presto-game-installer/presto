@@ -138,5 +138,30 @@ pub async fn run_executable(executable: &str, install_path: &str) -> Result<Stri
         }
     }
 
+    #[cfg(target_os = "linux")]
+    {
+        let run_game_result = Command::new(&path)
+            .output()
+            .map_err(|e| format!("Failed to run executable: {}", e))?;
+
+        if !run_game_result.status.success() {
+            return Err(format!("Failed to run app: {}", 
+                String::from_utf8_lossy(&run_game_result.stderr)));
+        }
+    }
+
+    #[cfg(target_os = "windows")]
+    {
+        let run_game_result = Command::new("powershell")
+            .args(["-Command", &format!("Start-Process '{}'", &path)])
+            .output()
+            .map_err(|e| format!("Failed to run executable: {}", e))?;
+
+        if !run_game_result.status.success() {
+            return Err(format!("Failed to run app: {}", 
+                String::from_utf8_lossy(&run_game_result.stderr)));
+        }
+    }
+
     Ok("Success".to_string())
 }
