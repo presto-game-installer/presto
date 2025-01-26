@@ -5,7 +5,7 @@ releaseDate: "5/26/2024"
 homepageLink: ""
 githubLink: "https://github.com/HarbourMasters/2ship2harkinian"
 heroImage: "/games/2s2h.png"
-tags: ["Recompilation"]
+tags: ["Recompilation", "N64"]
 version: "1.1.2"
 lastUpdatedDate: "12/19/2024"
 gameData: {

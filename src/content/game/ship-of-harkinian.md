@@ -5,7 +5,7 @@ releaseDate: "3/30/2024"
 homepageLink: "https://www.shipofharkinian.com"
 githubLink: "https://github.com/HarbourMasters/Shipwright"
 heroImage: "/games/soh.png"
-tags: ["Recompilation"]
+tags: ["Recompilation", "N64"]
 version: "8.0.6"
 lastUpdatedDate: "8/12/2024"
 gameData: {

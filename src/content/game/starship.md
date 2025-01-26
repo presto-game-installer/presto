@@ -6,7 +6,7 @@ homepageLink: ""
 githubLink: "https://github.com/HarbourMasters/Starship"
 heroImage: "/games/starship.png"
 badge: "NEW"
-tags: ["Recompilation"]
+tags: ["Recompilation", "N64"]
 version: "1.0"
 lastUpdatedDate: "12/22/2024"
 gameData: {
