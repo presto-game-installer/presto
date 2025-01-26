@@ -26,12 +26,13 @@ const { page } = Astro.props;
     function ready() {
       if(globalThis.presto.currentSettings.installed) {
         const installedGames = Object.keys(globalThis.presto.currentSettings.installed);
-        for(const gameSlugTitle of installedGames) {
-          const game = document.getElementById(gameSlugTitle);
-          if(game) {
-            game.classList.remove("hidden");
+        const GamesList = document.getElementById("games-list").children;
+        for(const child of GamesList) {
+          const game = child.id;
+          if(installedGames.includes(game)) {
+            child.classList.remove("hidden");
           } else {
-            game.querySelector("a").setAttribute("inert");
+            child.querySelector("a").setAttribute("inert","");
           }
         }
         document.getElementById("games-list").classList.remove("hidden");
