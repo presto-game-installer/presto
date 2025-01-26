@@ -19,9 +19,9 @@ NOTE:
 - Gamepad support for navigating the UI
 
 #### TODO:
-- Refine the markdown structure for games
 - Need a way to uninstall games
 - Need to setup auto-update for Presto
+- Would like to find a way to auto-add games to Steam
 
 Credit to :
 - https://github.com/manuelernestog/astrofy for the theme!
