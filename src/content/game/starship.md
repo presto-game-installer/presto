@@ -14,9 +14,10 @@ gameData: {
     downloadFile: "sf64-US-1.1ra.z64",
 }
 supportedPlatforms: ["windows", "linux proton"]
-platforms: {
+gamePlatforms: {
     windows: {
         downloadFile: "https://github.com/HarbourMasters/Starship/releases/download/v1.0.0/Starship-Centauri-Alfa-Windows.zip",
+        executable: "Starship-Centauri-Alfa.exe",
     }
 }
 ---

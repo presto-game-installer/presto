@@ -1,0 +1,43 @@
+---
+const { 
+    gamePathTitle,
+} = Astro.props;
+const classList = `btn hidden play play-${gamePathTitle}`;
+---
+<script is:inline>
+    if(globalThis.presto?.state != 'loaded') {
+        console.log("Settings not loaded yet");
+        addEventListener('presto:settings-loaded', () => {
+            ready();
+        });
+    } else {
+        ready();
+    }
+
+    function ready() {
+        const playButton = document.querySelector("button.play");
+        const gamePathTitle = playButton.dataset.gamePathTitle;
+        
+        // get current settings
+        let currentSettings = globalThis.presto.currentSettings;
+
+        if(currentSettings?.installed) {
+            const installedGames = Object.keys(currentSettings.installed);
+            if(installedGames.includes(gamePathTitle)) {
+                playButton.classList.remove("hidden");
+                playButton.removeAttribute("inert");
+            }
+        }
+
+        playButton.addEventListener("click", () => {
+            console.log("Play button clicked");
+        });
+    }
+</script>
+<button 
+    inert 
+    class={classList}
+    data-game-path-title={gamePathTitle}
+>
+    Play
+</button>

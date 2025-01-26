@@ -2,6 +2,7 @@
 import { type gameSchema } from "../content/config";
 import BaseLayout from "./BaseLayout.astro";
 import Install from "../components/Install.astro";
+import Play from "../components/Play.astro";
 import createSlug from "../lib/createSlug";
 
 export interface Props extends gameSchema {}
@@ -15,8 +16,7 @@ const { title,
   badge,
   tags = [],
   platforms,
-  gameData,
-  usesDMG } = Astro.props;
+  gameData} = Astro.props;
 import { Image } from "astro:assets";
 const formattedReleaseDate = new Date(releaseDate);
 const formattedLastUpdatedDate = new Date(lastUpdatedDate);
@@ -68,7 +68,9 @@ const gamePathTitle = createSlug(title, "noslug");
         version={version}
         platforms={platforms}
         gameData={gameData}
-        usesDMG={usesDMG}
+      />
+      <Play
+        gamePathTitle={gamePathTitle}
       />
       <slot />
     </article>

@@ -2,7 +2,7 @@
 const { 
     gamePathTitle,
     version,
-    platforms,
+    gamePlatforms,
     gameData,
 } = Astro.props;
 
@@ -48,16 +48,16 @@ const installButtonClasses = `btn hidden install install-${gamePathTitle}`;
         const homeDirPath = globalThis.presto.homeDirPath;
         
         // get platforms and game data
-        const platforms = JSON.parse(installButton.dataset.platforms);
+        const gamePlatforms = JSON.parse(installButton.dataset.gamePlatforms);
         const gameData = JSON.parse(installButton.dataset.gameData);
 
-        const downloadFile = platforms[currentPlatform].downloadFile;
+        const downloadFile = gamePlatforms[currentPlatform].downloadFile;
         console.debug("downloadFile", downloadFile);
-        const romInstallPath = platforms[currentPlatform].romInstallPath;
+        const romInstallPath = gamePlatforms[currentPlatform].romInstallPath;
         console.debug("romInstallPath", romInstallPath);
-        const romInstallDir = platforms[currentPlatform].romInstallDir;
+        const romInstallDir = gamePlatforms[currentPlatform].romInstallDir;
         console.debug("romInstallDir", romInstallDir);
-        const usesDmg = platforms[currentPlatform].usesDMG;
+        const usesDmg = gamePlatforms[currentPlatform].usesDMG;
         console.debug("usesDmg", usesDmg);
 
         const dataDownloadPath = gameData.downloadPath;
@@ -158,7 +158,7 @@ const installButtonClasses = `btn hidden install install-${gamePathTitle}`;
     class={installButtonClasses} 
     data-game-path-title={gamePathTitle} 
     data-game-version={version}
-    data-platforms={JSON.stringify(platforms)}
+    data-game-platforms={JSON.stringify(gamePlatforms)}
     data-game-data={JSON.stringify(gameData)}
 >
 Install

@@ -20,22 +20,25 @@ const gameSchema = z.object({
         downloadPath: z.string().url(),
         downloadFile: z.string(),
     }).optional(),
-    platforms: z.object({
+    gamePlatforms: z.object({
         linux: z.object({
             downloadFile: z.string().optional(),
+            executable: z.string().optional(),  
             romInstallPath: z.string().optional(),
             romInstallDir: z.string().optional(),
         }).optional(),
         windows: z.object({
             downloadFile: z.string().optional(),
+            executable: z.string().optional(),
             romInstallPath: z.string().optional(),
             romInstallDir: z.string().optional(),
         }).optional(),
         macos: z.object({
             downloadFile: z.string().optional(),
-            usesDMG: z.boolean().optional(),
+            executable: z.string().optional(),
             romInstallPath: z.string().optional(),
             romInstallDir: z.string().optional(),
+            usesDMG: z.boolean().optional(),
         }).optional(),
     })
 });
