@@ -11,7 +11,8 @@
 - Will keep track of installed games
 
 #### TODO:
-- Need to do crossplatform testing
+- Add gamepad support for navigating the UI
+- Refine the markdown structure for games
 - Need a way to uninstall games
 - Need a way to launch games
 
