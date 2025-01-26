@@ -9,6 +9,7 @@ use crate::filemgmt::convert_to_windows_path;
 pub async fn unzip_file(zip_path: String,
       temp_path: String,
       final_path: String,
+      #[cfg(target_os = "macos")]
       uses_dmg: bool) -> Result<String, String> {
 
     let temp_path_buf = PathBuf::from(temp_path.clone());
