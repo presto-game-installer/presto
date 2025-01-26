@@ -1,12 +1,12 @@
 ---
 title: "Starship"
-description: "A Recompilation of Starfox 64!"
+description: "A Decompilation of Starfox 64!"
 releaseDate: "12/22/2024"
 homepageLink: ""
 githubLink: "https://github.com/HarbourMasters/Starship"
 heroImage: "/games/starship.png"
 badge: "NEW"
-tags: ["Recompilation", "N64"]
+tags: ["Decompilation", "N64"]
 version: "1.0"
 lastUpdatedDate: "12/22/2024"
 gameData: {
