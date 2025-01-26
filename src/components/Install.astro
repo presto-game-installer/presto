@@ -57,7 +57,9 @@ const installButtonClasses = `btn hidden install install-${gamePathTitle}`;
         console.debug("romInstallPath", romInstallPath);
         const romInstallDir = platforms[currentPlatform].romInstallDir;
         console.debug("romInstallDir", romInstallDir);
-        
+        const usesDmg = platforms[currentPlatform].usesDMG;
+        console.debug("usesDmg", usesDmg);
+
         const dataDownloadPath = gameData.downloadPath;
         console.debug("dataDownloadPath", dataDownloadPath);
         const dataDownloadFile = gameData.downloadFile;
@@ -80,7 +82,7 @@ const installButtonClasses = `btn hidden install install-${gamePathTitle}`;
                             zipPath: zipPath,
                             tempPath: tempPath,
                             finalPath: finalPath,
-                            usesDMG: gameData.usesDMG
+                            usesDmg: usesDmg
                         });
                         globalThis.presto.functions.updateProgress('Installing', 100);
 
@@ -151,9 +153,13 @@ const installButtonClasses = `btn hidden install install-${gamePathTitle}`;
         }
     }
 </script>
-<button inert class={installButtonClasses} 
-data-game-path-title={gamePathTitle} 
-data-game-version={version}
-data-platforms={JSON.stringify(platforms)}
-data-game-data={JSON.stringify(gameData)}
->Install</button>
+<button 
+    inert 
+    class={installButtonClasses} 
+    data-game-path-title={gamePathTitle} 
+    data-game-version={version}
+    data-platforms={JSON.stringify(platforms)}
+    data-game-data={JSON.stringify(gameData)}
+>
+Install
+</button>
