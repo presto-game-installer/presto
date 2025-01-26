@@ -5,11 +5,11 @@ import { IS_CLIENT } from "../config";
 ---
 
 <ul class="menu grow shrink menu-md overflow-y-auto">
-    <li><a class="py-3 text-base" id="home" href="/">Presto</a></li>
-    {!IS_CLIENT && <li><a class="py-3 text-base" id="about" href="/about">What is Presto?</a></li>}
-    <li><a class="py-3 text-base" id="available-games" href="/available-games">Available Games</a></li>
-    {IS_CLIENT && <li><a class="py-3 text-base" id="installed-games" href="/installed-games">Installed Games</a></li>}
-    {IS_CLIENT && <li><a class="py-3 text-base" id="settings" href="/settings">Settings</a></li> }
+    <li><a class="py-3 text-base mb-4" id="home" href="/">Presto</a></li>
+    {!IS_CLIENT && <li><a class="py-3 text-base mb-4" id="about" href="/about">What is Presto?</a></li>}
+    <li><a class="py-3 text-base mb-4" id="available-games" href="/available-games">Available Games</a></li>
+    {IS_CLIENT && <li><a class="py-3 text-base mb-4" id="installed-games" href="/installed-games">Installed Games</a></li>}
+    {IS_CLIENT && <li><a class="py-3 text-base mb-4" id="settings" href="/settings">Settings</a></li> }
 </ul>
 
 <script define:vars={{ sideBarActiveItemID: sideBarActiveItemID, activeClass: activeClass }}>
