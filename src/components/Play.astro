@@ -1,6 +1,7 @@
 ---
 const { 
     gamePathTitle,
+    gamePlatforms,
 } = Astro.props;
 const classList = `btn hidden play play-${gamePathTitle}`;
 ---
@@ -17,7 +18,7 @@ const classList = `btn hidden play play-${gamePathTitle}`;
     function ready() {
         const playButton = document.querySelector("button.play");
         const gamePathTitle = playButton.dataset.gamePathTitle;
-        
+
         // get current settings
         let currentSettings = globalThis.presto.currentSettings;
 
@@ -38,6 +39,7 @@ const classList = `btn hidden play play-${gamePathTitle}`;
     inert 
     class={classList}
     data-game-path-title={gamePathTitle}
+    data-game-platforms={JSON.stringify(gamePlatforms)}
 >
     Play
 </button>
