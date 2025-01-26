@@ -126,6 +126,7 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
                     .then(async () => {
                         // If we got here, all previous operations were successful
                         await globalThis.presto.functions.setInstalled(gamePathTitle, gameVersion);
+                        window.location.reload(true);
                     })
                     .catch((error) => {
                         console.error("Installation failed:", error);
@@ -143,7 +144,7 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
                             console.error("Cleanup failed:", error);
                         } finally {
                             globalThis.presto.functions.showDownloadBar(false);
-                            window.location.reload(true);
+                            
                         }
                     });
                 }
