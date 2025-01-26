@@ -1,0 +1,56 @@
+---
+---
+<script src="/js/gamecontroller.min.js" is:inline/>
+<script is:inline>
+    document.addEventListener('astro:page-load', () => {
+    const focusableElements = 'button:not([inert]), a[href]:not([inert]), select:not([inert]), textarea:not([inert]), [tabindex]:not([tabindex="-1"])';
+    const allFocusable = Array.from(document.querySelectorAll(focusableElements));
+    console.log('allFocusable',allFocusable);
+    console.log('allFocusable[1]',allFocusable[1]);
+    allFocusable[1].focus();
+    });
+
+    gameControl.on('connect', gamepad => {
+    const focusableElements = 'button:not([inert]), a[href]:not([inert]), select:not([inert]), textarea:not([inert]), [tabindex]:not([tabindex="-1"])';
+        //set initial focus
+        const allFocusable = Array.from(document.querySelectorAll(focusableElements));
+        console.log('allFocusable',allFocusable);
+        console.log('allFocusable[1]',allFocusable[1]);
+        allFocusable[1].focus();
+        console.log('A new gamepad was connected!');
+
+        // UP
+        gamepad.after('button12',() => {
+        const focusableElements = 'button:not([inert]), a[href]:not([inert]), select:not([inert]), textarea:not([inert]), [tabindex]:not([tabindex="-1"])';
+        const currentElement = document.querySelector(':focus');
+        const allFocusable = Array.from(document.querySelectorAll(focusableElements));
+        console.log('allFocusable',allFocusable);
+        const currentIndex = allFocusable.indexOf(currentElement);
+        const nextElement = allFocusable[currentIndex - 1] || allFocusable[0];
+        console.log('nextElement',nextElement);
+        nextElement.focus();
+        console.log('Button 12 still pressed...'); 
+        
+        });
+
+        // DOWN
+        gamepad.after('button13',() => {
+        const focusableElements = 'button:not([inert]), a[href]:not([inert]), select:not([inert]), textarea:not([inert]), [tabindex]:not([tabindex="-1"])';
+        const currentElement = document.querySelector(':focus');
+        const allFocusable = Array.from(document.querySelectorAll(focusableElements));
+        console.log('allFocusable',allFocusable);
+        const currentIndex = allFocusable.indexOf(currentElement);
+        const nextElement = allFocusable[currentIndex + 1] || allFocusable[0];
+        console.log('nextElement',nextElement);
+        nextElement.focus();
+        console.log('Button 13 still pressed...'); 
+        });
+
+        // A or X
+        gamepad.after('button0',() => {
+        document.activeElement.click();
+        console.log('Button 0 still pressed...');             
+        });
+    });
+
+</script>
