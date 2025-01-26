@@ -30,6 +30,12 @@
         globalThis.presto.homeDirPath = await homeDir();
     }).then(async () => {
         globalThis.presto.currentPlatform = type();
+    }).then(async () => {
+      // if install path is not set, set it to the home directory + /games
+      if(globalThis.presto.currentSettings?.installPath === null) {
+        globalThis.presto.currentSettings.installPath = globalThis.presto.homeDirPath + "/games";
+        await globalThis.presto.store.set('settings', globalThis.presto.currentSettings);
+      }
     }).finally(() => {
         globalThis.presto.state = 'loaded';
         console.log("Settings loaded");

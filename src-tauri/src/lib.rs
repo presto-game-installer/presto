@@ -16,7 +16,8 @@ pub fn run() {
             unzip::unzip_file,
             filemgmt::move_file,
             filemgmt::cleanup_folder,
-            filemgmt::cleanup_file
+            filemgmt::cleanup_file,
+            filemgmt::run_executable
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

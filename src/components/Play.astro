@@ -30,8 +30,28 @@ const classList = `btn hidden play play-${gamePathTitle}`;
             }
         }
 
-        playButton.addEventListener("click", () => {
+        playButton.addEventListener("click", async () => {
+            const gamePlatforms = JSON.parse(playButton.dataset.gamePlatforms);
+
+            const currentPlatform = globalThis.presto.currentPlatform;
+            
+            let currentSettings = globalThis.presto.currentSettings;
+            const installPath = currentSettings?.installPath
+            
+            const gamePath =  installPath + "/" + playButton.dataset.gamePathTitle + "/";
+
+            const executable = gamePlatforms[currentPlatform].executable;
+
+            console.log("executable", executable);
+            console.log("gamePath", gamePath);
             console.log("Play button clicked");
+
+            result = await globalThis.presto.functions.genericInvoke('run_executable', { 
+                executable: executable,
+                installPath: gamePath
+            });
+
+            console.log("result", result);
         });
     }
 </script>

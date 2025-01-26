@@ -101,3 +101,26 @@ pub fn create_directory(path: &PathBuf) -> Result<(), String> {
     std::fs::create_dir_all(path)
         .map_err(|e| format!("Failed to create directory: {}", e))
 }
+
+#[tauri::command]
+pub async fn run_executable(executable: &str, install_path: &str) -> Result<String, String> {
+    let path = PathBuf::from(install_path).join(executable);
+    #[cfg(target_os = "windows")]{
+        let path = convert_to_windows_path(&path);
+    }
+
+    #[cfg(target_os = "macos")]
+    {
+        let run_game_result = Command::new("open")
+        .args(&[path])
+        .output()
+        .map_err(|e| format!("Failed to run executable: {}", e))?;
+
+        if !run_game_result.status.success() {
+            return Err(format!("Failed to run app: {}", 
+                String::from_utf8_lossy(&run_game_result.stderr)));
+        }
+    }
+
+    Ok("Success".to_string())
+}
