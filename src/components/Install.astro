@@ -79,7 +79,8 @@ const installButtonClasses = `btn hidden install install-${gamePathTitle}`;
                         result = await globalThis.presto.functions.genericInvoke('unzip_file', { 
                             zipPath: zipPath,
                             tempPath: tempPath,
-                            finalPath: finalPath
+                            finalPath: finalPath,
+                            usesDMG: gameData.usesDMG
                         });
                         globalThis.presto.functions.updateProgress('Installing', 100);
 

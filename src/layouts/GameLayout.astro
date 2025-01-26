@@ -15,7 +15,8 @@ const { title,
   badge,
   tags = [],
   platforms,
-  gameData } = Astro.props;
+  gameData,
+  usesDMG } = Astro.props;
 import { Image } from "astro:assets";
 const formattedReleaseDate = new Date(releaseDate);
 const formattedLastUpdatedDate = new Date(lastUpdatedDate);
@@ -67,6 +68,7 @@ const gamePathTitle = createSlug(title, "noslug");
         version={version}
         platforms={platforms}
         gameData={gameData}
+        usesDMG={usesDMG}
       />
       <slot />
     </article>

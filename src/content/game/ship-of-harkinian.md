@@ -21,6 +21,7 @@ platforms: {
     },
     macos: {
         downloadFile: "https://github.com/HarbourMasters/Shipwright/releases/download/8.0.6/SoH-MacReady-Golf-Mac.zip",
+        usesDMG: true,
         romInstallPath: "/Library/Application Support/",
         romInstallDir: "com.shipofharkinian.soh",
     }

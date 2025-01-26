@@ -21,6 +21,7 @@ platforms: {
     },
     macos: {
         downloadFile: "https://github.com/HarbourMasters/2ship2harkinian/releases/download/1.1.2/2Ship-Satoko-Charlie-Mac.zip",
+        usesDMG: true,
         romInstallPath: "/Library/Application Support/",
         romInstallDir: "com.2ship2harkinian.2s2h",
     }

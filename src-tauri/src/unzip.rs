@@ -8,7 +8,8 @@ use crate::filemgmt::convert_to_windows_path;
 #[tauri::command]
 pub async fn unzip_file(zip_path: String,
       temp_path: String,
-      final_path: String) -> Result<String, String> {
+      final_path: String,
+      uses_dmg: bool) -> Result<String, String> {
 
     let temp_path_buf = PathBuf::from(temp_path.clone());
     let final_path_buf = PathBuf::from(final_path.clone());
@@ -44,19 +45,25 @@ pub async fn unzip_file(zip_path: String,
 
         #[cfg(target_os = "macos")]
         {
+            let mut dest_path = final_path.clone();
+            if uses_dmg {
+                dest_path = temp_path.clone();
+            }
             Command::new("unzip")
                 .args(&[
                     "-o",
                     &zip_path,
                     "-d",
-                    &temp_path
+                    &dest_path
                 ])
                 .output()
                 .map_err(|e| format!("Failed to extract: {}", e))?;
 
-            match mount_and_copy_dmg(temp_path.clone(), final_path).await {
-                Ok(path) => return_path = path,
-                Err(e) => return Err(e)
+            if uses_dmg {
+                match mount_and_copy_dmg(temp_path.clone(), final_path).await {
+                    Ok(path) => return_path = path,
+                    Err(e) => return Err(e)
+                }
             }
         }
 

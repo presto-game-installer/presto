@@ -30,6 +30,7 @@ const gameSchema = z.object({
         }).optional(),
         macos: z.object({
             downloadFile: z.string().optional(),
+            usesDMG: z.boolean().optional(),
             romInstallPath: z.string().optional(),
             romInstallDir: z.string().optional(),
         }).optional(),
