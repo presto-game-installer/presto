@@ -6,38 +6,35 @@ const {
     gameData,
 } = Astro.props;
 
-const installButtonClasses = `btn hidden install install-${gamePathTitle}`;
+const buttonClasses = `btn hidden install install-${gamePathTitle}`;
 ---
 <script is:inline>
     if(globalThis.presto?.state != 'loaded') {
         console.log("Settings not loaded yet");
-        addEventListener('presto:settings-loaded', () => {
-            ready();
+        window.addEventListener('presto:settings-loaded', () => {
+            readyInstallButton();
         });
     } else {
-        ready();
+        readyInstallButton();
     }
 
-    function ready() {
-        const installButton = document.querySelector("button.install");
+    function readyInstallButton() {
+        const button = document.querySelector("button.install");
 
         // get current settings
         let currentSettings = globalThis.presto.currentSettings;
         const installPath = currentSettings?.installPath
 
-        const gamePathTitle = installButton.dataset.gamePathTitle;
+        const gamePathTitle = button.dataset.gamePathTitle;
         console.debug("gamePathTitle", gamePathTitle);
-        const gameVersion = installButton.dataset.gameVersion;
+        const gameVersion = button.dataset.gameVersion;
         console.debug("gameVersion", gameVersion);
 
         if(globalThis.presto.currentSettings.installed) {
             const installedGames = Object.keys(globalThis.presto.currentSettings.installed);
             if(!installedGames.includes(gamePathTitle)) {
-                const gameInstallButton = document.querySelector(`.install-${gamePathTitle}`);
-                if(gameInstallButton) {
-                    gameInstallButton.classList.remove("hidden");
-                    gameInstallButton.removeAttribute("inert");
-                }
+                button.classList.remove("hidden");
+                button.removeAttribute("inert");
             }
         }
 
@@ -48,8 +45,8 @@ const installButtonClasses = `btn hidden install install-${gamePathTitle}`;
         const homeDirPath = globalThis.presto.homeDirPath;
         
         // get platforms and game data
-        const gamePlatforms = JSON.parse(installButton.dataset.gamePlatforms);
-        const gameData = JSON.parse(installButton.dataset.gameData);
+        const gamePlatforms = JSON.parse(button.dataset.gamePlatforms);
+        const gameData = JSON.parse(button.dataset.gameData);
 
         const downloadFile = gamePlatforms[currentPlatform].downloadFile;
         console.debug("downloadFile", downloadFile);
@@ -65,8 +62,8 @@ const installButtonClasses = `btn hidden install install-${gamePathTitle}`;
         const dataDownloadFile = gameData.downloadFile;
         console.debug("dataDownloadFile", dataDownloadFile);
         
-        if(installButton != null) {
-            installButton.addEventListener("click", async () => {
+        if(button != null) {
+            button.addEventListener("click", async () => {
                 if (currentSettings && installPath) {
                     globalThis.presto.functions.showDownloadBar(true);
                     const zipPath = `${installPath}/${gamePathTitle}.zip`;
@@ -128,7 +125,7 @@ const installButtonClasses = `btn hidden install install-${gamePathTitle}`;
                     })
                     .then(async () => {
                         // If we got here, all previous operations were successful
-                        globalThis.presto.functions.setInstalled(gamePathTitle, gameVersion);
+                        await globalThis.presto.functions.setInstalled(gamePathTitle, gameVersion);
                     })
                     .catch((error) => {
                         console.error("Installation failed:", error);
@@ -146,6 +143,7 @@ const installButtonClasses = `btn hidden install install-${gamePathTitle}`;
                             console.error("Cleanup failed:", error);
                         } finally {
                             globalThis.presto.functions.showDownloadBar(false);
+                            window.location.reload(true);
                         }
                     });
                 }
@@ -155,7 +153,7 @@ const installButtonClasses = `btn hidden install install-${gamePathTitle}`;
 </script>
 <button 
     inert 
-    class={installButtonClasses} 
+    class={buttonClasses} 
     data-game-path-title={gamePathTitle} 
     data-game-version={version}
     data-game-platforms={JSON.stringify(gamePlatforms)}

@@ -17,13 +17,13 @@ const { page } = Astro.props;
       if(globalThis.presto?.state != 'loaded') {
         console.log("Settings not loaded yet");
         addEventListener('presto:settings-loaded', () => {
-            ready();
+            readyInstalledGamesCheck();
         });
     } else {
-        ready();
+      readyInstalledGamesCheck();
     }
 
-    function ready() {
+    function readyInstalledGamesCheck() {
       if(globalThis.presto.currentSettings.installed) {
         const installedGames = Object.keys(globalThis.presto.currentSettings.installed);
         const GamesList = document.getElementById("games-list").children;

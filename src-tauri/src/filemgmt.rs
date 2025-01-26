@@ -92,6 +92,22 @@ pub async fn cleanup_file(file: &str) -> Result<(), String> {
     Ok(())
 }
 
+#[tauri::command]
+pub async fn uninstall_game(game_path: &str, data_path: &str) -> Result<(), String> {
+    // Remove game directory if it exists
+    if PathBuf::from(game_path).exists() {
+        cleanup_folder(game_path).await?;
+    }
+
+    #[cfg(target_os = "macos")] {
+        if PathBuf::from(data_path).exists() {
+            cleanup_folder(data_path).await?;
+        }
+    }
+
+    Ok(())
+}
+
 #[cfg(target_os = "windows")]
 pub fn convert_to_windows_path(path: &str) -> String {
     path.replace("/", "\\")

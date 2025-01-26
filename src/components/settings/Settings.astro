@@ -9,15 +9,33 @@
     import { invoke } from '@tauri-apps/api/core';
     import { homeDir } from '@tauri-apps/api/path';
 
-    if(typeof globalThis.presto === 'undefined') {
-        globalThis.presto = {};
+    interface PrestoType {
+        state: string;
+        currentSettings: {
+            installed: Record<string, any>;
+            installPath?: string;
+        };
+        functions: Record<string, any>;
+        store?: any;
+        homeDirPath?: string;
+        currentPlatform?: string;
+        gamepadControls?: Record<string, any>;
     }
 
-    //setup presto
-    globalThis.presto.state = 'loading';
-    globalThis.presto.currentSettings = {
-        installed: {}
-    };
+    declare global {
+        var presto: PrestoType;
+    }
+
+    if(typeof globalThis.presto === 'undefined') {
+        globalThis.presto = {
+            state: 'loading',
+            currentSettings: {
+                installed: {}
+            },
+            functions: {},
+            gamepadControls: {}
+        };
+    }
 
     //setup settings and store
     globalThis.presto.store = await load('presto-data.json', { autoSave: true });
@@ -51,7 +69,11 @@
     //setup functions needed that interact with tauri
     globalThis.presto.functions = {}
 
-    globalThis.presto.functions.setInstalled = (game, version) => {
+    globalThis.presto.functions.saveSettings = async () => {
+        await globalThis.presto.store.set('settings', globalThis.presto.currentSettings);
+    }
+
+    globalThis.presto.functions.setInstalled = async (game, version) => {
         if(!globalThis.presto.currentSettings.installed) {
             globalThis.presto.currentSettings.installed = {};
         }
@@ -60,7 +82,7 @@
         } else {
             globalThis.presto.currentSettings.installed[game] = {};
             globalThis.presto.currentSettings.installed[game].version = version;
-            globalThis.presto.store.set('settings', globalThis.presto.currentSettings);
+            await globalThis.presto.functions.saveSettings();
         }
     }
 
@@ -71,7 +93,7 @@
 
         if (newInstallPath) {
             globalThis.presto.currentSettings.installPath = newInstallPath;
-            await globalThis.presto.store.set('settings', globalThis.presto.currentSettings);
+            await globalThis.presto.functions.saveSettings();
         }
     }
 

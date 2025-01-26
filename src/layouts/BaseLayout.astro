@@ -27,10 +27,10 @@ const {
   <head>
     <BaseHead title={title} description={description} image={image} , ogType={ogType} />
     {TRANSITION_API && <ViewTransitions />}
-    <GamePadControls />
+    <Settings transition:persist/>
+    <GamePadControls transition:persist/>
   </head>
   <body>
-    <Settings transition:persist/>
     <div class="bg-base-100 drawer lg:drawer-open">
       <input id="my-drawer" type="checkbox" class="drawer-toggle" />
       <div class="drawer-content bg-base-100">

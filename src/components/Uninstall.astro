@@ -1,0 +1,100 @@
+---
+const { 
+    gamePathTitle,
+    gamePlatforms
+} = Astro.props;
+
+const buttonClasses = `btn hidden uninstall float-right bg-red-950 text-white uninstall-${gamePathTitle}`;
+---
+<script is:inline>
+    if(globalThis.presto?.state != 'loaded') {
+        console.log("Settings not loaded yet");
+        window.addEventListener('presto:settings-loaded', () => {
+            readyUninstallButton();
+        });
+    } else {
+        readyUninstallButton();
+    }
+
+    function readyUninstallButton() {
+        const button = document.querySelector("button.uninstall");
+
+        const gamePathTitle = button.dataset.gamePathTitle;
+        const gamePlatforms = JSON.parse(button.dataset.gamePlatforms);
+        const currentPlatform = globalThis.presto.currentPlatform;
+
+
+        if(globalThis.presto.currentSettings.installed) {
+            const installedGames = Object.keys(globalThis.presto.currentSettings.installed);
+            if(installedGames.includes(gamePathTitle)) {
+                button.classList.remove("hidden");
+                button.removeAttribute("inert");
+            }
+        }
+
+        if(button != null) {
+            button.addEventListener("click", async () => {
+                console.log("Uninstall button clicked");
+                
+                if (button.innerText === "Press again to confirm Uninstall") {
+                    // Second click - do the uninstall
+                    let currentSettings = globalThis.presto.currentSettings;
+                    const installPath = currentSettings?.installPath;
+                    const gamePath = `${installPath}/${gamePathTitle}`;
+
+                    const platformPaths = gamePlatforms[currentPlatform];
+                    const romInstallPath = platformPaths.romInstallPath;
+                    const romInstallDir = platformPaths.romInstallDir;
+                    let dataPath = "";
+
+                    if(romInstallPath != null && romInstallDir != null) {
+                        dataPath = `${globalThis.presto.homeDirPath}/${romInstallPath}/${romInstallDir}`;
+                    }
+
+                    try {
+                        await globalThis.presto.functions.genericInvoke('uninstall_game', {
+                            gamePath: gamePath,
+                            dataPath: dataPath
+                        });
+                        
+                        // If we get here, the invoke completed without throwing an error
+                        const checkDelete = delete currentSettings.installed[gamePathTitle];
+                        console.log("Check delete:", checkDelete);
+
+                        if(checkDelete) {
+                            await globalThis.presto.functions.saveSettings();
+                            window.location.href = `/available-games/${gamePathTitle}`;
+                        }
+                    } catch (error) {
+                        console.error("Failed to uninstall:", error);
+                        // Show error to user
+                        alert("Failed to uninstall game. Check console for details.");
+                    }
+
+                } else {
+                    button.innerText = "Press again to confirm Uninstall";
+                    // First click - show confirmation
+                    const resetButton = () => {
+                        button.innerText = "Uninstall";
+                    };
+
+                    // Reset on blur/click outside
+                    button.addEventListener("blur", resetButton, {once: true});
+                    document.addEventListener("click", (e) => {
+                        if (e.target !== button) {
+                            resetButton();
+                        }
+                    }, {once: true});
+                }
+            });
+        }
+    }
+</script>
+<button 
+    inert 
+    class={buttonClasses} 
+    data-game-path-title={gamePathTitle}
+    data-game-platforms={JSON.stringify(gamePlatforms)}
+>
+Uninstall
+</button>

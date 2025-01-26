@@ -2,6 +2,7 @@
 import { type gameSchema } from "../content/config";
 import BaseLayout from "./BaseLayout.astro";
 import Install from "../components/Install.astro";
+import Uninstall from "../components/Uninstall.astro";
 import Play from "../components/Play.astro";
 import createSlug from "../lib/createSlug";
 
@@ -63,16 +64,22 @@ const gamePathTitle = createSlug(title, "noslug");
           )
       }
       <div class="divider my-2"></div>
-      <Install 
-        gamePathTitle={gamePathTitle}
-        version={version}
-        gamePlatforms={gamePlatforms}
-        gameData={gameData}
-      />
-      <Play
-        gamePathTitle={gamePathTitle}
-        gamePlatforms={gamePlatforms}
-      />
+      <div class="actions">
+        <Install 
+          gamePathTitle={gamePathTitle}
+          version={version}
+          gamePlatforms={gamePlatforms}
+          gameData={gameData}
+        />
+        <Play
+          gamePathTitle={gamePathTitle}
+          gamePlatforms={gamePlatforms}
+        />
+        <Uninstall
+          gamePathTitle={gamePathTitle}
+          gamePlatforms={gamePlatforms}
+        />
+      </div>
       <slot />
     </article>
   </main>

@@ -17,7 +17,8 @@ pub fn run() {
             filemgmt::move_file,
             filemgmt::cleanup_folder,
             filemgmt::cleanup_file,
-            filemgmt::run_executable
+            filemgmt::run_executable,
+            filemgmt::uninstall_game
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

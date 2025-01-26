@@ -3,21 +3,21 @@ const {
     gamePathTitle,
     gamePlatforms,
 } = Astro.props;
-const classList = `btn hidden play play-${gamePathTitle}`;
+const buttonClasses = `btn hidden play play-${gamePathTitle}`;
 ---
 <script is:inline>
     if(globalThis.presto?.state != 'loaded') {
         console.log("Settings not loaded yet");
-        addEventListener('presto:settings-loaded', () => {
-            ready();
+        window.addEventListener('presto:settings-loaded', () => {
+            readyPlayButton();
         });
     } else {
-        ready();
+        readyPlayButton();
     }
 
-    function ready() {
-        const playButton = document.querySelector("button.play");
-        const gamePathTitle = playButton.dataset.gamePathTitle;
+    function readyPlayButton() {
+        const button = document.querySelector("button.play");
+        const gamePathTitle = button.dataset.gamePathTitle;
 
         // get current settings
         let currentSettings = globalThis.presto.currentSettings;
@@ -25,20 +25,20 @@ const classList = `btn hidden play play-${gamePathTitle}`;
         if(currentSettings?.installed) {
             const installedGames = Object.keys(currentSettings.installed);
             if(installedGames.includes(gamePathTitle)) {
-                playButton.classList.remove("hidden");
-                playButton.removeAttribute("inert");
+                button.classList.remove("hidden");
+                button.removeAttribute("inert");
             }
         }
 
-        playButton.addEventListener("click", async () => {
-            const gamePlatforms = JSON.parse(playButton.dataset.gamePlatforms);
+        button.addEventListener("click", async () => {
+            const gamePlatforms = JSON.parse(button.dataset.gamePlatforms);
 
             const currentPlatform = globalThis.presto.currentPlatform;
             
             let currentSettings = globalThis.presto.currentSettings;
             const installPath = currentSettings?.installPath
             
-            const gamePath =  installPath + "/" + playButton.dataset.gamePathTitle + "/";
+            const gamePath =  installPath + "/" + button.dataset.gamePathTitle + "/";
 
             const executable = gamePlatforms[currentPlatform].executable;
 
@@ -57,7 +57,7 @@ const classList = `btn hidden play play-${gamePathTitle}`;
 </script>
 <button 
     inert 
-    class={classList}
+    class={buttonClasses}
     data-game-path-title={gamePathTitle}
     data-game-platforms={JSON.stringify(gamePlatforms)}
 >
