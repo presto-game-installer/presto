@@ -20,6 +20,7 @@ NOTE:
 
 #### TODO:
 - Need to setup auto-update for Presto
+- Add flatpak support
 - Would like to find a way to auto-add games to Steam
 
 Credit to :
