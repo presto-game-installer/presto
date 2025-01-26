@@ -13,15 +13,10 @@ gameData: {
     downloadPath: "https://archive.org/download/z64-pal-gc-debug/",
     downloadFile: "sf64-US-1.1ra.z64",
 }
+supportedPlatforms: ["windows", "linux proton"]
 platforms: {
     windows: {
         downloadFile: "https://github.com/HarbourMasters/Starship/releases/download/v1.0.0/Starship-Centauri-Alfa-Windows.zip",
-    },
-    macos: {
-        downloadFile: "",
-    },
-    linux: {
-        downloadFile: "",
     }
 }
 ---

@@ -10,6 +10,9 @@ const gameSchema = z.object({
     version: z.string(),
     heroImage: z.string().optional(),
     badge: z.string().optional(),
+    supportedPlatforms: z.array(z.string()).refine(items => new Set(items).size === items.length, {
+        message: 'supported platforms must be unique',
+    }).optional(),
     tags: z.array(z.string()).refine(items => new Set(items).size === items.length, {
         message: 'tags must be unique',
     }).optional(),

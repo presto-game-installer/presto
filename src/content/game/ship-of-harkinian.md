@@ -12,6 +12,7 @@ gameData: {
     downloadPath: "https://archive.org/download/z64-pal-gc-debug/",
     downloadFile: "z64-PAL-1.1.z64",
 }
+supportedPlatforms: ["windows", "macos", "linux native"]
 platforms: {
     linux: {
         downloadFile: "https://github.com/HarbourMasters/Shipwright/releases/download/8.0.6/SoH-MacReady-Golf-Linux-Performance.zip",

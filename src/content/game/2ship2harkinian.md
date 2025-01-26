@@ -12,6 +12,7 @@ gameData: {
     downloadPath: "https://archive.org/download/z64-pal-gc-debug/",
     downloadFile: "z64mm-NA-GC.z64",
 }
+supportedPlatforms: ["windows", "macos", "linux native"]
 platforms: {
     linux: {
         downloadFile: "https://github.com/HarbourMasters/2ship2harkinian/releases/download/1.1.2/2Ship-Satoko-Charlie-Linux.zip",

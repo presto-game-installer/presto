@@ -1,6 +1,7 @@
 ---
-const { title, slugTitle, defaultHide, img, desc, url, badge, tags, target = "_blank" } = Astro.props;
+const { title, slugTitle, defaultHide, img, desc, url, badge, supportedPlatforms, tags, target = "_blank" } = Astro.props;
 import { Image } from "astro:assets";
+import platformList from "../supportedPlatforms.json";
 const tag_url = url.split("/").slice(0, -1).join("/") + "/tag";
 let classList = "rounded-lg bg-base-100 hover:shadow-xl transition ease-in-out hover:scale-[102%]";
 if(defaultHide) {
@@ -33,6 +34,16 @@ if(defaultHide) {
           {badge && <div class="badge badge-secondary mx-2">{badge}</div>}
         </h1>
         <p class="py-1 text-1xl">{desc}</p>
+        <div class="card-actions justify-start">
+          {
+            supportedPlatforms &&
+              supportedPlatforms.map((platform) => (
+                <span class="icon-container">
+                  <img src={platformList[platform].icon} alt={platformList[platform].name} />
+                </span>
+              ))
+          }
+        </div>
         <div class="card-actions justify-end">
           {
             tags &&

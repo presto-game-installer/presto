@@ -1,0 +1,18 @@
+{
+    "windows": {
+        "name": "Windows",
+        "icon": "/logos/windows-logo.svg"
+    },
+    "macos": {
+        "name": "macOS",
+        "icon": "/logos/apple-logo.svg"
+    },
+    "linux native": {
+        "name": "Linux Native",
+        "icon": "/logos/linux-logo.svg"
+    },
+    "linux proton": {
+        "name": "Linux Proton",
+        "icon": "/logos/proton-logo.png"
+    }
+}
