@@ -2,54 +2,143 @@
 ---
 <script src="/js/gamecontroller.min.js" is:inline/>
 <script is:inline>
-    document.addEventListener('astro:page-load', () => {
     const focusableElements = 'button:not([inert]), a[href]:not([inert]), select:not([inert]), textarea:not([inert]), [tabindex]:not([tabindex="-1"])';
-    const allFocusable = Array.from(document.querySelectorAll(focusableElements));
-    console.log('allFocusable',allFocusable);
-    console.log('allFocusable[1]',allFocusable[1]);
-    allFocusable[1].focus();
+    
+    // When the page loads, focus the first focusable element
+    document.addEventListener('astro:page-load', () => {
+        const allFocusable = Array.from(document.querySelectorAll(focusableElements));
+        console.log('allFocusable',allFocusable);
+        allFocusable[1].focus();
     });
 
+    if(typeof globalThis.presto === 'undefined') {
+        globalThis.presto = {};
+    }
+
+    globalThis.presto.gamepadControls = {
+        getCurrentFocusableElement: function() {
+            return document.querySelector(':focus');
+        },
+        getAllFocusableElements: function(parent) {
+            if(typeof parent === 'undefined') {
+                parent = document;
+            }
+            return Array.from(parent.querySelectorAll(focusableElements));
+        },
+        findCurrentElementIndex: function() {
+            const allFocusable = this.getAllFocusableElements();
+            const currentElement = this.getCurrentFocusableElement();
+            return allFocusable.indexOf(currentElement);
+        },
+        findNextElement: function() {
+            const allFocusable = this.getAllFocusableElements();
+            const currentIndex = this.findCurrentElementIndex();
+            const nextElement = allFocusable[currentIndex + 1] || allFocusable[0];
+            return nextElement;
+        },
+        findPreviousElement: function() {
+            const allFocusable = this.getAllFocusableElements();
+            const currentIndex = this.findCurrentElementIndex();
+            const previousElement = allFocusable[currentIndex - 1] || allFocusable[0];
+            return previousElement;
+        },
+        focusFirstElementInMenu: function() {
+            this.getAllFocusableElements(document.querySelector('.drawer-side'))[0].focus();
+        },
+        focusFirstElementInMainContent: function() {
+            this.getAllFocusableElements(document.querySelector('main'))[0].focus();
+        },
+        pressCurrentElement: function() {
+            document.activeElement.click();
+        },
+        goBack: function() {
+            window.history.back();
+        },
+        goDown: function() {
+            this.findNextElement().focus();
+        },
+        goUp: function() {
+            this.findPreviousElement().focus();
+        },
+        goToSettings: function() {
+            window.location.href = '/settings';
+        }
+    }
+    
     gameControl.on('connect', gamepad => {
-    const focusableElements = 'button:not([inert]), a[href]:not([inert]), select:not([inert]), textarea:not([inert]), [tabindex]:not([tabindex="-1"])';
         //set initial focus
         const allFocusable = Array.from(document.querySelectorAll(focusableElements));
-        console.log('allFocusable',allFocusable);
-        console.log('allFocusable[1]',allFocusable[1]);
         allFocusable[1].focus();
-        console.log('A new gamepad was connected!');
+        console.debug('A new gamepad was connected!');
 
         // UP
-        gamepad.after('button12',() => {
-        const focusableElements = 'button:not([inert]), a[href]:not([inert]), select:not([inert]), textarea:not([inert]), [tabindex]:not([tabindex="-1"])';
-        const currentElement = document.querySelector(':focus');
-        const allFocusable = Array.from(document.querySelectorAll(focusableElements));
-        console.log('allFocusable',allFocusable);
-        const currentIndex = allFocusable.indexOf(currentElement);
-        const nextElement = allFocusable[currentIndex - 1] || allFocusable[0];
-        console.log('nextElement',nextElement);
-        nextElement.focus();
-        console.log('Button 12 still pressed...'); 
-        
-        });
+        gamepad
+            .after('button12',() => {
+                globalThis.presto.gamepadControls.goUp();
+                console.debug('Button 12 still pressed...'); 
+            })
+            .after('up0',() => {
+                globalThis.presto.gamepadControls.goUp();
+                console.debug('up0 still pressed...'); 
+            });
 
         // DOWN
-        gamepad.after('button13',() => {
-        const focusableElements = 'button:not([inert]), a[href]:not([inert]), select:not([inert]), textarea:not([inert]), [tabindex]:not([tabindex="-1"])';
-        const currentElement = document.querySelector(':focus');
-        const allFocusable = Array.from(document.querySelectorAll(focusableElements));
-        console.log('allFocusable',allFocusable);
-        const currentIndex = allFocusable.indexOf(currentElement);
-        const nextElement = allFocusable[currentIndex + 1] || allFocusable[0];
-        console.log('nextElement',nextElement);
-        nextElement.focus();
-        console.log('Button 13 still pressed...'); 
+        gamepad
+            .after('button13',() => {
+                globalThis.presto.gamepadControls.goDown();
+                console.debug('Button 13 still pressed...'); 
+            })
+            .after('down0',() => {
+                globalThis.presto.gamepadControls.goDown();
+                console.debug('down0 still pressed...'); 
+            });
+
+        // LEFT
+        gamepad
+            .after('button14',() => {
+                globalThis.presto.gamepadControls.focusFirstElementInMenu();
+                console.debug('Button 14 still pressed...'); 
+            })
+            .after('left0',() => {
+                globalThis.presto.gamepadControls.focusFirstElementInMenu();
+                console.debug('left0 still pressed...'); 
+            })
+            .after('l1',() => {
+                globalThis.presto.gamepadControls.focusFirstElementInMenu();
+                console.debug('l1 still pressed...'); 
+            });
+
+        // RIGHT
+        gamepad
+            .after('button15',() => {
+                globalThis.presto.gamepadControls.focusFirstElementInMainContent();
+                console.debug('Button 15 still pressed...'); 
+            })
+            .after('right0',() => {
+                globalThis.presto.gamepadControls.focusFirstElementInMainContent();
+                console.debug('right0 still pressed...'); 
+            })
+            .after('r1',() => {
+                globalThis.presto.gamepadControls.focusFirstElementInMainContent();
+                console.debug('r1 still pressed...'); 
+            });
+
+        // A
+        gamepad.after('button0',() => {
+            globalThis.presto.gamepadControls.pressCurrentElement();
+            console.debug('Button 0 still pressed...');             
         });
 
-        // A or X
-        gamepad.after('button0',() => {
-        document.activeElement.click();
-        console.log('Button 0 still pressed...');             
+        // B
+        gamepad.after('button1',() => {
+            globalThis.presto.gamepadControls.goBack();
+            console.debug('Button 1 still pressed...');             
+        });
+
+        // select
+        gamepad.after('select',() => {
+            globalThis.presto.gamepadControls.goToSettings();
+            console.debug('Select still pressed...');             
         });
     });
 

@@ -9,16 +9,17 @@
     import { invoke } from '@tauri-apps/api/core';
     import { homeDir } from '@tauri-apps/api/path';
 
+    if(typeof globalThis.presto === 'undefined') {
+        globalThis.presto = {};
+    }
+
     //setup presto
-    globalThis.presto = {
-      state: 'loading',
-      currentSettings: {
+    globalThis.presto.state = 'loading';
+    globalThis.presto.currentSettings = {
         installed: {}
-      },
     };
 
     //setup settings and store
-    globalThis.presto.currentSettings = {};
     globalThis.presto.store = await load('presto-data.json', { autoSave: true });
     await globalThis.presto.store.get('settings').then(
         (settings: { value: string } | null) => {
