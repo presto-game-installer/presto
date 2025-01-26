@@ -16,11 +16,11 @@ supportedPlatforms: ["windows", "macos", "linux native"]
 gamePlatforms: {
     linux: {
         downloadFile: "https://github.com/HarbourMasters/Shipwright/releases/download/8.0.6/SoH-MacReady-Golf-Linux-Performance.zip",
-        executable: "SoH-MacReady-Golf",
+        executable: "soh.appimage",
     },
     windows: {
         downloadFile: "https://github.com/HarbourMasters/Shipwright/releases/download/8.0.6/SoH-MacReady-Golf-Win64.zip",
-        executable: "SoH-MacReady-Golf.exe",
+        executable: "soh.exe",
     },
     macos: {
         downloadFile: "https://github.com/HarbourMasters/Shipwright/releases/download/8.0.6/SoH-MacReady-Golf-Mac.zip",

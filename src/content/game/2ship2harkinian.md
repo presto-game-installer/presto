@@ -16,11 +16,11 @@ supportedPlatforms: ["windows", "macos", "linux native"]
 gamePlatforms: {
     linux: {
         downloadFile: "https://github.com/HarbourMasters/2ship2harkinian/releases/download/1.1.2/2Ship-Satoko-Charlie-Linux.zip",
-        executable: "2Ship-Satoko-Charlie",
+        executable: "2ship.appimage",
     },
     windows: {
         downloadFile: "https://github.com/HarbourMasters/2ship2harkinian/releases/download/1.1.2/2Ship-Satoko-Charlie-Win64.zip",
-        executable: "2Ship-Satoko-Charlie.exe",
+        executable: "2ship.exe",
     },
     macos: {
         downloadFile: "https://github.com/HarbourMasters/2ship2harkinian/releases/download/1.1.2/2Ship-Satoko-Charlie-Mac.zip",
