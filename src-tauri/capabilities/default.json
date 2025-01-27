@@ -31,6 +31,10 @@
           "cmd": "powershell",
           "args": [
             "Expand-Archive",
+            "Start-Process",
+            "-FilePath",
+            "-WorkingDirectory",
+            "-NoNewWindow",
             "-Path",
             "-DestinationPath",
             "-Force",

@@ -6,15 +6,15 @@ use crate::filemgmt::create_directory;
 use crate::filemgmt::convert_to_windows_path;
 
 #[tauri::command]
-pub async fn unzip_file(zip_path: String,
-      temp_path: String,
-      final_path: String,
-      #[cfg(target_os = "macos")]
-      uses_dmg: bool) -> Result<String, String> {
+#[allow(unused_variables)] // To prevent unused parameter warnings on non-macOS
+pub async fn unzip_file(
+    zip_path: String,
+    temp_path: String, 
+    final_path: String,
+    uses_dmg: Option<bool>) -> Result<String, String> {
 
     let temp_path_buf = PathBuf::from(temp_path.clone());
     let final_path_buf = PathBuf::from(final_path.clone());
-    let mut return_path = String::new();
 
     // Create extraction directory if it doesn't exist
     if !temp_path_buf.exists() {
@@ -42,12 +42,14 @@ pub async fn unzip_file(zip_path: String,
                 ])
                 .output()
                 .map_err(|e| format!("Failed to extract on Windows: {}", e))?;
+            Ok(final_path)
         }
 
         #[cfg(target_os = "macos")]
         {
+            let mut return_path = String::new();
             let mut dest_path = final_path.clone();
-            if uses_dmg {
+            if uses_dmg.expect("uses_dmg is required") {
                 dest_path = temp_path.clone();
             }
             Command::new("unzip")
@@ -60,12 +62,13 @@ pub async fn unzip_file(zip_path: String,
                 .output()
                 .map_err(|e| format!("Failed to extract: {}", e))?;
 
-            if uses_dmg {
+            if uses_dmg.expect("uses_dmg is required") {
                 match mount_and_copy_dmg(temp_path.clone(), final_path).await {
                     Ok(path) => return_path = path,
                     Err(e) => return Err(e)
                 }
             }
+            Ok(return_path)
         }
 
         #[cfg(target_os = "linux")]
@@ -79,8 +82,8 @@ pub async fn unzip_file(zip_path: String,
                 ])
                 .output()
                 .map_err(|e| format!("Failed to extract: {}", e))?;
+            Ok(final_path)
         }
-        Ok(return_path)
     }.await;    
     result
 }

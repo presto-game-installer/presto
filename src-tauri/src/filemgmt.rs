@@ -120,13 +120,10 @@ pub fn create_directory(path: &PathBuf) -> Result<(), String> {
 
 #[tauri::command]
 pub async fn run_executable(executable: &str, install_path: &str) -> Result<String, String> {
-    let path = PathBuf::from(install_path).join(executable);
-    #[cfg(target_os = "windows")]{
-        let path = convert_to_windows_path(&path);
-    }
 
     #[cfg(target_os = "macos")]
     {
+        let path = PathBuf::from(install_path).join(executable);
         let run_game_result = Command::new("open")
         .args(&[path])
         .output()
@@ -140,6 +137,7 @@ pub async fn run_executable(executable: &str, install_path: &str) -> Result<Stri
 
     #[cfg(target_os = "linux")]
     {
+        let path = PathBuf::from(install_path).join(executable);
         let run_game_result = Command::new(&path)
             .output()
             .map_err(|e| format!("Failed to run executable: {}", e))?;
@@ -152,8 +150,16 @@ pub async fn run_executable(executable: &str, install_path: &str) -> Result<Stri
 
     #[cfg(target_os = "windows")]
     {
+        log::info!("{}",convert_to_windows_path(&install_path));
         let run_game_result = Command::new("powershell")
-            .args(["-Command", &format!("Start-Process '{}'", &path)])
+            .args(&[
+                "Start-Process",
+                "-FilePath",
+                &executable,
+                "-WorkingDirectory",
+                &convert_to_windows_path(&install_path),
+                "-verb RunAs"
+            ])
             .output()
             .map_err(|e| format!("Failed to run executable: {}", e))?;
 
