@@ -17,8 +17,8 @@ gamePlatforms: {
     linux: {
         downloadFile: "https://github.com/HarbourMasters/2ship2harkinian/releases/download/1.1.2/2Ship-Satoko-Charlie-Linux.zip",
         executable: "2ship.appimage",
-        romInstallToGameDir: false,
-        romInstallToHomeDir: true,
+        romInstallToGameDir: true,
+        romInstallToHomeDir: false,
         romInstallPath: "",
         romInstallDir: "",
     },

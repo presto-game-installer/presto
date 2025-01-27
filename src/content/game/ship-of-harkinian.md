@@ -17,8 +17,8 @@ gamePlatforms: {
     linux: {
         downloadFile: "https://github.com/HarbourMasters/Shipwright/releases/download/8.0.6/SoH-MacReady-Golf-Linux-Performance.zip",
         executable: "soh.appimage",
-        romInstallToGameDir: false,
-        romInstallToHomeDir: true,
+        romInstallToGameDir: true,
+        romInstallToHomeDir: false,
         romInstallPath: "",
         romInstallDir: "",
     },
