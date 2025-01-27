@@ -1,9 +1,6 @@
 use std::path::PathBuf;
 use std::process::Command;
 
-#[cfg(target_os = "linux")]
-use dirs;
-
 #[tauri::command]
 pub async fn move_file(source: String, destination: String) -> Result<(), String> {
     let dest_path = PathBuf::from(&destination);
