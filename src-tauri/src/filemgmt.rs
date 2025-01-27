@@ -143,9 +143,7 @@ pub async fn run_executable(executable: &str, install_path: &str) -> Result<Stri
     #[cfg(target_os = "linux")]
     {
         // Get home directory path
-        let home_dir = dirs::home_dir()
-            .ok_or_else(|| "Could not find home directory".to_string())?;
-        let path = PathBuf::from(home_dir).join(install_path).join(executable);
+        let path = PathBuf::from(install_path).join(executable);
         log::info!("{}",&path.display());
         let run_game_result = Command::new(&path)
             .output()
