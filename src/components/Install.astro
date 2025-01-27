@@ -55,11 +55,13 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
         console.debug("romInstallToGameDir", romInstallToGameDir);
         const romInstallToHomeDir = gamePlatforms[currentPlatform].romInstallToHomeDir;
         console.debug("romInstallToHomeDir", romInstallToHomeDir);
+        const gameExecutable = gamePlatforms[currentPlatform].gameExecutable;
+        console.debug("gameExecutable", gameExecutable);
         const romInstallPath = gamePlatforms[currentPlatform].romInstallPath;
         console.debug("romInstallPath", romInstallPath);
         const romInstallDir = gamePlatforms[currentPlatform].romInstallDir;
         console.debug("romInstallDir", romInstallDir);
-        
+
         const usesDmg = gamePlatforms[currentPlatform].usesDMG;
         console.debug("usesDmg", usesDmg);
 
@@ -83,7 +85,8 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
                             zipPath: zipPath,
                             tempPath: tempPath,
                             finalPath: finalPath,
-                            usesDmg: usesDmg
+                            usesDmg: usesDmg,
+                            gameExecutable: gameExecutable,
                         });
                         globalThis.presto.functions.updateProgress('Installing', 100);
 

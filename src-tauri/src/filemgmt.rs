@@ -121,15 +121,15 @@ pub fn create_directory(path: &str) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub async fn run_executable(executable: &str, install_path: &str) -> Result<String, String> {
+pub async fn run_executable(game_executable: &str, install_path: &str) -> Result<String, String> {
 
     #[cfg(target_os = "macos")]
     {
-        let path = PathBuf::from(install_path).join(executable);
+        let path = PathBuf::from(install_path).join(game_executable);
         let run_game_result = Command::new("open")
         .args(&[path])
         .output()
-        .map_err(|e| format!("Failed to run executable: {}", e))?;
+        .map_err(|e| format!("Failed to run game_executable: {}", e))?;
 
         if !run_game_result.status.success() {
             return Err(format!("Failed to run app: {}", 
@@ -140,13 +140,13 @@ pub async fn run_executable(executable: &str, install_path: &str) -> Result<Stri
     #[cfg(target_os = "linux")]
     {
         // Get home directory path
-        let path = PathBuf::from(install_path).join(executable);
+        let path = PathBuf::from(install_path).join(game_executable);
         log::info!("{}",&path.display());
         let run_game_result = Command::new("setsid")
             .args(&[&path])
             .current_dir(install_path)
             .output()
-            .map_err(|e| format!("Failed to run executable: {}", e))?;
+            .map_err(|e| format!("Failed to run game_executable: {}", e))?;
 
         if !run_game_result.status.success() {
             return Err(format!("Failed to run app: {}", 
@@ -161,13 +161,13 @@ pub async fn run_executable(executable: &str, install_path: &str) -> Result<Stri
             .args(&[
                 "Start-Process",
                 "-FilePath",
-                &executable,
+                &game_executable,
                 "-WorkingDirectory",
                 &convert_to_windows_path(&install_path),
                 "-verb RunAs"
             ])
             .output()
-            .map_err(|e| format!("Failed to run executable: {}", e))?;
+            .map_err(|e| format!("Failed to run game_executable: {}", e))?;
 
         if !run_game_result.status.success() {
             return Err(format!("Failed to run app: {}", 

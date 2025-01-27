@@ -23,7 +23,7 @@ const gameSchema = z.object({
     gamePlatforms: z.object({
         linux: z.object({
             downloadFile: z.string().optional(),
-            executable: z.string().optional(),  
+            gameExecutable: z.string().optional(),  
             romInstallToGameDir: z.boolean().optional(),
             romInstallToHomeDir: z.boolean().optional(),
             romInstallPath: z.string().optional(),
@@ -31,7 +31,7 @@ const gameSchema = z.object({
         }).optional(),
         windows: z.object({
             downloadFile: z.string().optional(),
-            executable: z.string().optional(),
+            gameExecutable: z.string().optional(),
             romInstallToGameDir: z.boolean().optional(),
             romInstallToHomeDir: z.boolean().optional(),
             romInstallPath: z.string().optional(),
@@ -39,7 +39,7 @@ const gameSchema = z.object({
         }).optional(),
         macos: z.object({
             downloadFile: z.string().optional(),
-            executable: z.string().optional(),
+            gameExecutable: z.string().optional(),
             romInstallToGameDir: z.boolean().optional(),
             romInstallToHomeDir: z.boolean().optional(),
             romInstallPath: z.string().optional(),

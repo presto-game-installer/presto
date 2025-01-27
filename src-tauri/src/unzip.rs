@@ -13,7 +13,8 @@ pub async fn unzip_file(
     zip_path: String,
     temp_path: String, 
     final_path: String,
-    uses_dmg: Option<bool>) -> Result<String, String> {
+    uses_dmg: Option<bool>,
+    game_executable: Option<String>) -> Result<String, String> {
 
     // Create extraction directory if it doesn't exist
     create_directory(&temp_path)?;
@@ -82,11 +83,11 @@ pub async fn unzip_file(
                     "+x",
                     &format!("{}/{}",
                      final_path,
-                     executable
+                     game_executable.expect("game_executable is required")
                     )
                 ])
                 .output()
-                .map_err(|e| format!("Failed to set executable permissions: {}", e))?;
+                .map_err(|e| format!("Failed to set gameExecutable permissions: {}", e))?;
 
             Ok(final_path)
         }

@@ -40,14 +40,14 @@ const buttonClasses = `btn hidden play play-${gamePathTitle}`;
             
             const gamePath =  installPath + "/" + button.dataset.gamePathTitle + "/";
 
-            const executable = gamePlatforms[currentPlatform].executable;
+            const gameExecutable = gamePlatforms[currentPlatform].gameExecutable;
 
-            console.log("executable", executable);
+            console.log("gameExecutable", gameExecutable);
             console.log("gamePath", gamePath);
             console.log("Play button clicked");
 
             result = await globalThis.presto.functions.genericInvoke('run_executable', { 
-                executable: executable,
+                gameExecutable: gameExecutable,
                 installPath: gamePath
             });
 

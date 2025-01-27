@@ -16,7 +16,7 @@ supportedPlatforms: ["windows", "macos", "linux native"]
 gamePlatforms: {
     linux: {
         downloadFile: "https://github.com/HarbourMasters/2ship2harkinian/releases/download/1.1.2/2Ship-Satoko-Charlie-Linux.zip",
-        executable: "2ship.appimage",
+        gameExecutable: "2ship.appimage",
         romInstallToGameDir: true,
         romInstallToHomeDir: false,
         romInstallPath: "",
@@ -24,7 +24,7 @@ gamePlatforms: {
     },
     windows: {
         downloadFile: "https://github.com/HarbourMasters/2ship2harkinian/releases/download/1.1.2/2Ship-Satoko-Charlie-Win64.zip",
-        executable: "2ship.exe",
+        gameExecutable: "2ship.exe",
         romInstallToGameDir: true,
         romInstallToHomeDir: false,
         romInstallPath: "",
@@ -32,7 +32,7 @@ gamePlatforms: {
     },
     macos: {
         downloadFile: "https://github.com/HarbourMasters/2ship2harkinian/releases/download/1.1.2/2Ship-Satoko-Charlie-Mac.zip",
-        executable: "2s2h.app",
+        gameExecutable: "2s2h.app",
         usesDMG: true,
         romInstallToGameDir: false,
         romInstallToHomeDir: true,

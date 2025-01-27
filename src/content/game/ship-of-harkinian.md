@@ -16,7 +16,7 @@ supportedPlatforms: ["windows", "macos", "linux native"]
 gamePlatforms: {
     linux: {
         downloadFile: "https://github.com/HarbourMasters/Shipwright/releases/download/8.0.6/SoH-MacReady-Golf-Linux-Performance.zip",
-        executable: "soh.appimage",
+        gameExecutable: "soh.appimage",
         romInstallToGameDir: true,
         romInstallToHomeDir: false,
         romInstallPath: "",
@@ -24,7 +24,7 @@ gamePlatforms: {
     },
     windows: {
         downloadFile: "https://github.com/HarbourMasters/Shipwright/releases/download/8.0.6/SoH-MacReady-Golf-Win64.zip",
-        executable: "soh.exe",
+        gameExecutable: "soh.exe",
         romInstallToGameDir: true,
         romInstallToHomeDir: false,
         romInstallPath: "",
@@ -32,7 +32,7 @@ gamePlatforms: {
     },
     macos: {
         downloadFile: "https://github.com/HarbourMasters/Shipwright/releases/download/8.0.6/SoH-MacReady-Golf-Mac.zip",
-        executable: "soh.app",
+        gameExecutable: "soh.app",
         usesDMG: true,
         romInstallToGameDir: false,
         romInstallToHomeDir: true,
