@@ -113,7 +113,8 @@ pub fn convert_to_windows_path(path: &str) -> String {
     path.replace("/", "\\")
 }
 
-pub fn create_directory(path: &PathBuf) -> Result<(), String> {
+#[tauri::command]
+pub fn create_directory(path: &str) -> Result<(), String> {
     std::fs::create_dir_all(path)
         .map_err(|e| format!("Failed to create directory: {}", e))
 }
@@ -137,7 +138,11 @@ pub async fn run_executable(executable: &str, install_path: &str) -> Result<Stri
 
     #[cfg(target_os = "linux")]
     {
-        let path = PathBuf::from(install_path).join(executable);
+        // Get home directory path
+        let home_dir = dirs::home_dir()
+            .ok_or_else(|| "Could not find home directory".to_string())?;
+        let path = PathBuf::from(home_dir).join(install_path).join(executable);
+        log::info!("{}",&path);
         let run_game_result = Command::new(&path)
             .output()
             .map_err(|e| format!("Failed to run executable: {}", e))?;

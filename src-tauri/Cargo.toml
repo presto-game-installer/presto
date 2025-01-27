@@ -1,6 +1,6 @@
 [package]
 name = "Presto"
-version = "0.1.0"
+version = "0.1.1"
 description = "Game Loader"
 authors = ["Ronald Diemicke"]
 edition = "2021"

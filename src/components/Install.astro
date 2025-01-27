@@ -50,10 +50,16 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
 
         const downloadFile = gamePlatforms[currentPlatform].downloadFile;
         console.debug("downloadFile", downloadFile);
+
+        const romInstallToGameDir = gamePlatforms[currentPlatform].romInstallToGameDir;
+        console.debug("romInstallToGameDir", romInstallToGameDir);
+        const romInstallToHomeDir = gamePlatforms[currentPlatform].romInstallToHomeDir;
+        console.debug("romInstallToHomeDir", romInstallToHomeDir);
         const romInstallPath = gamePlatforms[currentPlatform].romInstallPath;
         console.debug("romInstallPath", romInstallPath);
         const romInstallDir = gamePlatforms[currentPlatform].romInstallDir;
         console.debug("romInstallDir", romInstallDir);
+        
         const usesDmg = gamePlatforms[currentPlatform].usesDMG;
         console.debug("usesDmg", usesDmg);
 
@@ -72,10 +78,8 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
                     
                     await globalThis.presto.functions.downloadFile(downloadFile, zipPath)
                     .then(async () => {
-                        // Extract based on platform
-                        let result;
-                        
-                        result = await globalThis.presto.functions.genericInvoke('unzip_file', { 
+                        // Extract based on platform                        
+                        let result = await globalThis.presto.functions.genericInvoke('unzip_file', { 
                             zipPath: zipPath,
                             tempPath: tempPath,
                             finalPath: finalPath,
@@ -83,8 +87,6 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
                         });
                         globalThis.presto.functions.updateProgress('Installing', 100);
 
-                        console.debug("zipPath", zipPath);
-                        console.debug("finalPath", finalPath);
                         console.debug("result", result);
                     })
                     .catch((error) => {
@@ -93,34 +95,34 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
                     })
                     .then(async () => {
                         console.debug("download path", `${dataDownloadPath}${dataDownloadFile}`);
-                        console.debug("temp path", `${tempPath}/${dataDownloadFile}`);
-                        // If we're on windows or linux, we can download the data file to the final path
-                        // If we're on macos, we need to move the file to the temp path and move it later
-                        let destPath = `${finalPath}/${dataDownloadFile}`;
-                        if(currentPlatform == 'macos') {
-                            destPath = `${tempPath}/${dataDownloadFile}`;
+                        
+                        // There's some configuration you can do per game
+                        // Sometimes you need to put the rom in the game dir
+                        // Sometimes you need to put the rom in the home dir
+                        // Sometimes it needs to go somewhere else...
+
+                        let destPath;
+                        if(romInstallToGameDir) {
+                            destPath = `${finalPath}/${dataDownloadFile}`;
+                        } else {
+                            if(romInstallToHomeDir) {
+                                destPath = `${homeDirPath}${romInstallPath}${romInstallDir}/${dataDownloadFile}`;
+                            } else {
+                                destPath = `${romInstallPath}${romInstallDir}/${dataDownloadFile}`;
+                            }
                         }
+                        console.debug("dest path", destPath);
+                        
+                        // Create destination directory before downloading
+                        await globalThis.presto.functions.genericInvoke('create_directory', {
+                            path: destPath.substring(0, destPath.lastIndexOf('/'))
+                        });
+                        
+                        // Download the data file to the destination path
                         await globalThis.presto.functions.downloadFile(`${dataDownloadPath}${dataDownloadFile}`,destPath);
                     })
                     .catch((error) => {
                         console.error("Failed to download data file:", error);
-                        throw error;
-                    })
-                    .then(async () => {
-                        if(currentPlatform === 'macos') {
-                            console.debug("temp move file step", `${tempPath}/${dataDownloadFile}`, tempPath);
-                            console.debug("dest path",`${homeDirPath}${romInstallPath}/${romInstallDir}/${dataDownloadFile}`)
-                            let result;
-                            
-                            result = await globalThis.presto.functions.genericInvoke('move_file', { 
-                                source: `${tempPath}/${dataDownloadFile}`,
-                                destination: `${homeDirPath}${romInstallPath}/${romInstallDir}/${dataDownloadFile}`,
-                            });
-                            console.debug("result", result);
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Failed to move file:", error);
                         throw error;
                     })
                     .then(async () => {
@@ -133,6 +135,7 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
                         throw error;
                     })
                     .finally(async () => {
+                        // either way we're done, so clean up
                         try {
                             await globalThis.presto.functions.genericInvoke('cleanup_folder', { 
                                 folder: `${tempPath}`
@@ -144,7 +147,6 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
                             console.error("Cleanup failed:", error);
                         } finally {
                             globalThis.presto.functions.showDownloadBar(false);
-                            
                         }
                     });
                 }

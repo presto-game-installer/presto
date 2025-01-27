@@ -13,17 +13,11 @@ pub async fn unzip_file(
     final_path: String,
     uses_dmg: Option<bool>) -> Result<String, String> {
 
-    let temp_path_buf = PathBuf::from(temp_path.clone());
-    let final_path_buf = PathBuf::from(final_path.clone());
+
 
     // Create extraction directory if it doesn't exist
-    if !temp_path_buf.exists() {
-        create_directory(&temp_path_buf)?;
-    }
-
-    if !final_path_buf.exists() {
-        create_directory(&final_path_buf)?;
-    }
+    create_directory(&temp_path)?;
+    create_directory(&final_path)?;
 
     let result = async {
         #[cfg(target_os = "windows")]

@@ -20,6 +20,7 @@ pub fn run() {
             unzip::unzip_file,
             filemgmt::move_file,
             filemgmt::cleanup_folder,
+            filemgmt::create_directory,
             filemgmt::cleanup_file,
             filemgmt::run_executable,
             filemgmt::uninstall_game

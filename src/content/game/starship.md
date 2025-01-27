@@ -18,6 +18,10 @@ gamePlatforms: {
     windows: {
         downloadFile: "https://github.com/HarbourMasters/Starship/releases/download/v1.0.0/Starship-Centauri-Alfa-Windows.zip",
         executable: "Starship-Centauri-Alfa.exe",
+        romInstallToGameDir: true,
+        romInstallToHomeDir: false,
+        romInstallPath: "",
+        romInstallDir: "",
     }
 }
 ---
