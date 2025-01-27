@@ -1,6 +1,9 @@
 use std::path::PathBuf;
 use std::process::Command;
 
+#[cfg(target_os = "linux")]
+use dirs;
+
 #[tauri::command]
 pub async fn move_file(source: String, destination: String) -> Result<(), String> {
     let dest_path = PathBuf::from(&destination);
@@ -99,6 +102,7 @@ pub async fn uninstall_game(game_path: &str, _data_path: &str) -> Result<(), Str
         cleanup_folder(game_path).await?;
     }
 
+    //TODO: Need to come back to clean this up to remove the data file and make this less os dependent
     #[cfg(target_os = "macos")] {
         if PathBuf::from(_data_path).exists() {
             cleanup_folder(_data_path).await?;
@@ -142,7 +146,7 @@ pub async fn run_executable(executable: &str, install_path: &str) -> Result<Stri
         let home_dir = dirs::home_dir()
             .ok_or_else(|| "Could not find home directory".to_string())?;
         let path = PathBuf::from(home_dir).join(install_path).join(executable);
-        log::info!("{}",&path);
+        log::info!("{}",&path.display());
         let run_game_result = Command::new(&path)
             .output()
             .map_err(|e| format!("Failed to run executable: {}", e))?;
