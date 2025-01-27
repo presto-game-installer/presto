@@ -76,9 +76,16 @@ pub async fn unzip_file(
                 ])
                 .output()
                 .map_err(|e| format!("Failed to extract: {}", e))?;
-            Ok(final_path)
 
-            //TODO: May need to come back to set execution permissions
+            Command::new("chmod")
+                .args(&[
+                    "+x",
+                    &format!("{}/{}}", final_path, executable)
+                ])
+                .output()
+                .map_err(|e| format!("Failed to set executable permissions: {}", e))?;
+
+            Ok(final_path)
         }
     }.await;    
     result
