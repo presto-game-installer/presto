@@ -15,8 +15,6 @@ pub async fn unzip_file(
     final_path: String,
     uses_dmg: Option<bool>) -> Result<String, String> {
 
-
-
     // Create extraction directory if it doesn't exist
     create_directory(&temp_path)?;
     create_directory(&final_path)?;
@@ -79,6 +77,8 @@ pub async fn unzip_file(
                 .output()
                 .map_err(|e| format!("Failed to extract: {}", e))?;
             Ok(final_path)
+
+            //TODO: May need to come back to set execution permissions
         }
     }.await;    
     result

@@ -145,8 +145,8 @@ pub async fn run_executable(executable: &str, install_path: &str) -> Result<Stri
         // Get home directory path
         let path = PathBuf::from(install_path).join(executable);
         log::info!("{}",&path.display());
-        let run_game_result = Command::new(&path)
-            .args(&[" &"])
+        let run_game_result = Command::new("setsid")
+            .args(&[&path])
             .output()
             .map_err(|e| format!("Failed to run executable: {}", e))?;
 
