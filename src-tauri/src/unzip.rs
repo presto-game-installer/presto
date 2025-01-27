@@ -1,6 +1,8 @@
-use std::path::PathBuf;
 use std::process::Command;
 use crate::filemgmt::create_directory;
+
+#[cfg(target_os = "macos")]
+use std::path::PathBuf;
 
 #[cfg(target_os = "windows")]
 use crate::filemgmt::convert_to_windows_path;
