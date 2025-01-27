@@ -80,7 +80,10 @@ pub async fn unzip_file(
             Command::new("chmod")
                 .args(&[
                     "+x",
-                    &format!("{}/{}}", final_path, executable)
+                    &format!("{}/{}",
+                     final_path,
+                     executable
+                    )
                 ])
                 .output()
                 .map_err(|e| format!("Failed to set executable permissions: {}", e))?;
