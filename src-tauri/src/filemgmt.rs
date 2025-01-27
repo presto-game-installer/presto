@@ -146,6 +146,7 @@ pub async fn run_executable(executable: &str, install_path: &str) -> Result<Stri
         let path = PathBuf::from(install_path).join(executable);
         log::info!("{}",&path.display());
         let run_game_result = Command::new(&path)
+            .args(&[" &"])
             .output()
             .map_err(|e| format!("Failed to run executable: {}", e))?;
 
