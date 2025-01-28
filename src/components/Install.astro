@@ -51,16 +51,14 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
         const downloadFile = gamePlatforms[currentPlatform].downloadFile;
         console.debug("downloadFile", downloadFile);
 
-        const romInstallToGameDir = gamePlatforms[currentPlatform].romInstallToGameDir;
-        console.debug("romInstallToGameDir", romInstallToGameDir);
-        const romInstallToHomeDir = gamePlatforms[currentPlatform].romInstallToHomeDir;
-        console.debug("romInstallToHomeDir", romInstallToHomeDir);
+        const dataInstallToGameDir = gamePlatforms[currentPlatform].dataInstallToGameDir;
+        console.debug("dataInstallToGameDir", dataInstallToGameDir);
+        const dataInstallToHomeDir = gamePlatforms[currentPlatform].dataInstallToHomeDir;
+        console.debug("dataInstallToHomeDir", dataInstallToHomeDir);
         const gameExecutable = gamePlatforms[currentPlatform].gameExecutable;
         console.debug("gameExecutable", gameExecutable);
-        const romInstallPath = gamePlatforms[currentPlatform].romInstallPath;
-        console.debug("romInstallPath", romInstallPath);
-        const romInstallDir = gamePlatforms[currentPlatform].romInstallDir;
-        console.debug("romInstallDir", romInstallDir);
+        const dataInstallPath = gamePlatforms[currentPlatform].dataInstallPath;
+        console.debug("dataInstallPath", dataInstallPath);
 
         const usesDmg = gamePlatforms[currentPlatform].usesDMG;
         console.debug("usesDmg", usesDmg);
@@ -105,13 +103,13 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
                         // Sometimes it needs to go somewhere else...
 
                         let destPath;
-                        if(romInstallToGameDir) {
+                        if(dataInstallToGameDir) {
                             destPath = `${finalPath}/${dataDownloadFile}`;
                         } else {
-                            if(romInstallToHomeDir) {
-                                destPath = `${homeDirPath}${romInstallPath}${romInstallDir}/${dataDownloadFile}`;
+                            if(dataInstallToHomeDir) {
+                                destPath = `${homeDirPath}${dataInstallPath}/${dataDownloadFile}`;
                             } else {
-                                destPath = `${romInstallPath}${romInstallDir}/${dataDownloadFile}`;
+                                destPath = `${dataInstallPath}/${dataDownloadFile}`;
                             }
                         }
                         console.debug("dest path", destPath);

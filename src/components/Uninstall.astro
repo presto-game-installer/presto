@@ -43,12 +43,11 @@ const buttonClasses = `btn hidden uninstall float-right bg-red-950 text-white un
                     const gamePath = `${installPath}/${gamePathTitle}`;
 
                     const platformPaths = gamePlatforms[currentPlatform];
-                    const romInstallPath = platformPaths.romInstallPath;
-                    const romInstallDir = platformPaths.romInstallDir;
+                    const dataInstallPath = platformPaths.dataInstallPath;
                     let dataPath = "";
 
-                    if(romInstallPath != null && romInstallDir != null) {
-                        dataPath = `${globalThis.presto.homeDirPath}/${romInstallPath}/${romInstallDir}`;
+                    if(dataInstallPath != null) {
+                        dataPath = `${globalThis.presto.homeDirPath}/${dataInstallPath}`;
                     }
 
                     try {
