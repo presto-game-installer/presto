@@ -41,7 +41,7 @@ const params = Astro.params;
           <>
             <HorizontalCard
               title={game.data.title}
-              img={game.data.heroImage}
+              slugTitle={createSlug(game.data.title, game.slug)}
               desc={game.data.description}
               url={"/available-games/" + createSlug(game.data.title, game.slug)}
               target="_self"

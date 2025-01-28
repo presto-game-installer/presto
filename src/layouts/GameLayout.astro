@@ -13,7 +13,6 @@ const { title,
   releaseDate,
   lastUpdatedDate,
   version,
-  heroImage,
   badge,
   tags = [],
   gamePlatforms,
@@ -22,12 +21,19 @@ import { Image } from "astro:assets";
 const formattedReleaseDate = new Date(releaseDate);
 const formattedLastUpdatedDate = new Date(lastUpdatedDate);
 const gamePathTitle = createSlug(title, "noslug");
-
+const gameImage = "/games/" + gamePathTitle + ".png";
 ---
-<BaseLayout title={title} description={description} image={heroImage}, ogType="article">
+<BaseLayout title={title} description={description} image={gameImage}, ogType="article">
   <div class="md:flex md:justify-center">
     <article class="prose prose-lg max-w-[750px] prose-img:mx-auto">
-      {heroImage && <Image width={750} height={422} format="webp" src={heroImage} alt={title} class="w-full mb-6" />}
+      <Image 
+        width={750} 
+        height={422} 
+        format="webp" 
+        src={gameImage} 
+        alt={title} 
+        class="w-full mb-6"
+      />
       <h1 data-game-path-title={gamePathTitle} class="title my-2 text-4xl font-bold">{title}</h1>
       {badge && <div class="badge badge-secondary my-1">{badge}</div>}
       {

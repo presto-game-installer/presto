@@ -59,7 +59,6 @@ const { page } = Astro.props;
             title={game.data.title}
             slugTitle={createSlug(game.data.title, game.slug)}
             defaultHide={true}
-            img={game.data.heroImage}
             desc={game.data.description}
             url={"/installed-games/" + createSlug(game.data.title, game.slug)}
             target="_self"

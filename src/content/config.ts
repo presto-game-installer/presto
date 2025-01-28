@@ -8,7 +8,6 @@ const gameSchema = z.object({
     homepageLink: z.string().optional(),
     githubLink: z.string().url(),
     version: z.string(),
-    heroImage: z.string().optional(),
     badge: z.string().optional(),
     supportedPlatforms: z.array(z.string()).refine(items => new Set(items).size === items.length, {
         message: 'supported platforms must be unique',

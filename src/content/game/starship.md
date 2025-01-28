@@ -4,7 +4,6 @@ description: "A Decompilation of Starfox 64!"
 releaseDate: "12/22/2024"
 homepageLink: ""
 githubLink: "https://github.com/HarbourMasters/Starship"
-heroImage: "/games/starship.png"
 badge: "NEW"
 tags: ["Decompilation", "N64"]
 version: "1.0"

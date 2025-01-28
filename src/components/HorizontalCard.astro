@@ -1,7 +1,8 @@
 ---
-const { title, slugTitle, defaultHide, img, desc, url, badge, supportedPlatforms, tags, target = "_blank" } = Astro.props;
+const { title, slugTitle, defaultHide, desc, url, badge, supportedPlatforms, tags, target = "_blank" } = Astro.props;
 import { Image } from "astro:assets";
 import platformList from "../supportedPlatforms.json";
+const gameImage = "/games/" + slugTitle + ".png";
 const tag_url = url.split("/").slice(0, -1).join("/") + "/tag";
 let classList = "rounded-lg bg-base-100 hover:shadow-xl transition ease-in-out hover:scale-[102%]";
 if(defaultHide) {
@@ -16,18 +17,14 @@ if(defaultHide) {
 >
   <a href={url} target={target}>
     <div class="hero-content flex-col md:flex-row">
-      {
-        img && (
           <Image
-            src={img}
+            src={gameImage}
             width={750}
             height={422}
-            format="webp"
+            format="png"
             alt={title}
             class="max-w-full md:max-w-[13rem] rounded-lg"
           />
-        )
-      }
       <div class="grow w-full">
         <h1 class="text-xl font-bold">
           {title}

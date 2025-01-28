@@ -4,7 +4,6 @@ description: "A Decompilation of The Legend of Zelda: Majora's Mask!"
 releaseDate: "5/26/2024"
 homepageLink: ""
 githubLink: "https://github.com/HarbourMasters/2ship2harkinian"
-heroImage: "/games/2s2h.png"
 tags: ["Decompilation", "N64"]
 version: "1.1.2"
 lastUpdatedDate: "12/19/2024"
