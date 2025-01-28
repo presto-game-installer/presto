@@ -37,6 +37,11 @@ Lastly - I've wanted to play with Tauri and Rust for a while now... and I haven'
 - Add more games, look into adding open source ports of games
 - Look into a companion server app, so if you have gog games, repacks, isos, ect... you could have a way to remotely catalog and install them
 
+#### How can I help?
+- Add more games! The documentation is in [`docs/game-md-structure.md`](docs/game-md-structure.md) file.
+- Also accepting PRs to make things better.
+- Open to suggestions!
+
 NOTE:
 - This project is UNAFFILIATED with Steam, Valve, or any other game company.
 - This project is UNAFFILIATED with any of the developers of these projects.
