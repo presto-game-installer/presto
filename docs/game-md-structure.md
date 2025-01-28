@@ -4,11 +4,13 @@ In the `src/content/game` directory, each game has a markdown file that contains
 
 The aim is to make it as easy as possible to add a new game with the options being configurable enough to meet the needs of most games.
 
-The game description goes in the body of the file.
+**Note:** The game's display image should be in the `/public/games` directory. The name of the file should be the slug of the game's title (spaces replaced with dashes, no special characters, all lowercase). Files should be in .png format.
 
-The front matter is the metadata for the game.
+- The game description goes in the body of the file.
 
-it is structured as follows:
+- The front matter is the metadata for the game.
+
+It is structured as follows:
 
 ```
 ---
