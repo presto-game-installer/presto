@@ -23,6 +23,7 @@ tags: "Tags for filtering games" (Array of Strings)
 version: "Game Version" (String)
 lastUpdatedDate: "Date game was last updated [MM/DD/YYYY]" (String)
 gameData: {
+    "needsGameData": "true/false if the game needs data files to be installed" (Boolean)
     "downloadPath": "a link to where the game's files are hosted" (String)
     "downloadFile": "the name of the game's data file to download" (String)
 }

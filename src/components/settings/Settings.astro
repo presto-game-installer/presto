@@ -57,12 +57,12 @@
       }
     }).finally(() => {
         globalThis.presto.state = 'loaded';
-        console.log("Settings loaded");
+        console.debug("Presto:: Settings loaded");
         const event = new CustomEvent('presto:settings-loaded', {});
         window.dispatchEvent(event);
     }).catch((error) => {
         globalThis.presto.state = 'error';
-        console.error("Error loading settings", error);
+        console.error("Presto:: Error loading settings", error);
     });
 
 

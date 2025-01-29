@@ -3,7 +3,7 @@
 <script src="/js/gamecontroller.min.js" is:inline/>
 <script is:inline>
     if(globalThis.presto?.state != 'loaded') {
-        console.log("Settings not loaded yet");
+        console.debug("Presto:: Settings not loaded yet");
         addEventListener('presto:settings-loaded', () => {
             readyGamePadControls();
         });
@@ -74,76 +74,76 @@
             //set initial focus
             const allFocusable = Array.from(document.querySelectorAll(focusableElements));
             allFocusable[1].focus();
-            console.debug('A new gamepad was connected!');
+            console.debug('Presto:: A new gamepad was connected!');
 
             // UP
             gamepad
                 .after('button12',() => {
                     globalThis.presto.gamepadControls.goUp();
-                    console.debug('Button 12 still pressed...'); 
+                    console.debug('Presto:: Button 12 still pressed...'); 
                 })
                 .after('up0',() => {
                     globalThis.presto.gamepadControls.goUp();
-                    console.debug('up0 still pressed...'); 
+                    console.debug('Presto:: up0 still pressed...'); 
                 });
 
             // DOWN
             gamepad
                 .after('button13',() => {
                     globalThis.presto.gamepadControls.goDown();
-                    console.debug('Button 13 still pressed...'); 
+                    console.debug('Presto:: Button 13 still pressed...'); 
                 })
                 .after('down0',() => {
                     globalThis.presto.gamepadControls.goDown();
-                    console.debug('down0 still pressed...'); 
+                    console.debug('Presto:: down0 still pressed...'); 
                 });
 
             // LEFT
             gamepad
                 .after('button14',() => {
                     globalThis.presto.gamepadControls.focusFirstElementInMenu();
-                    console.debug('Button 14 still pressed...'); 
+                    console.debug('Presto:: Button 14 still pressed...'); 
                 })
                 .after('left0',() => {
                     globalThis.presto.gamepadControls.focusFirstElementInMenu();
-                    console.debug('left0 still pressed...'); 
+                    console.debug('Presto:: left0 still pressed...'); 
                 })
                 .after('l1',() => {
                     globalThis.presto.gamepadControls.focusFirstElementInMenu();
-                    console.debug('l1 still pressed...'); 
+                    console.debug('Presto:: l1 still pressed...'); 
                 });
 
             // RIGHT
             gamepad
                 .after('button15',() => {
                     globalThis.presto.gamepadControls.focusFirstElementInMainContent();
-                    console.debug('Button 15 still pressed...'); 
+                    console.debug('Presto:: Button 15 still pressed...'); 
                 })
                 .after('right0',() => {
                     globalThis.presto.gamepadControls.focusFirstElementInMainContent();
-                    console.debug('right0 still pressed...'); 
+                    console.debug('Presto:: right0 still pressed...'); 
                 })
                 .after('r1',() => {
                     globalThis.presto.gamepadControls.focusFirstElementInMainContent();
-                    console.debug('r1 still pressed...'); 
+                    console.debug('Presto:: r1 still pressed...'); 
                 });
 
             // A
             gamepad.after('button0',() => {
                 globalThis.presto.gamepadControls.pressCurrentElement();
-                console.debug('Button 0 still pressed...');             
+                console.debug('Presto:: Button 0 still pressed...');             
             });
 
             // B
             gamepad.after('button1',() => {
                 globalThis.presto.gamepadControls.goBack();
-                console.debug('Button 1 still pressed...');             
+                console.debug('Presto:: Button 1 still pressed...');             
             });
 
             // select
             gamepad.after('select',() => {
                 globalThis.presto.gamepadControls.goToSettings();
-                console.debug('Select still pressed...');             
+                console.debug('Presto:: Select still pressed...');             
             });
         });
     }

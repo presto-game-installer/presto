@@ -7,7 +7,7 @@ const buttonClasses = `btn hidden play play-${gamePathTitle}`;
 ---
 <script is:inline>
     if(globalThis.presto?.state != 'loaded') {
-        console.log("Settings not loaded yet");
+        console.debug("Presto:: Settings not loaded yet");
         window.addEventListener('presto:settings-loaded', () => {
             readyPlayButton();
         });
@@ -42,16 +42,16 @@ const buttonClasses = `btn hidden play play-${gamePathTitle}`;
 
             const gameExecutable = gamePlatforms[currentPlatform].gameExecutable;
 
-            console.log("gameExecutable", gameExecutable);
-            console.log("gamePath", gamePath);
-            console.log("Play button clicked");
+            console.debug("Presto:: gameExecutable", gameExecutable);
+            console.debug("Presto:: gamePath", gamePath);
+            console.debug("Presto:: Play button clicked");
 
             result = await globalThis.presto.functions.genericInvoke('run_executable', { 
                 gameExecutable: gameExecutable,
                 installPath: gamePath
             });
 
-            console.log("result", result);
+            console.debug("Presto:: result", result);
         });
     }
 </script>

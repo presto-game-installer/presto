@@ -10,7 +10,7 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
 ---
 <script is:inline>
     if(globalThis.presto?.state != 'loaded') {
-        console.log("Settings not loaded yet");
+        console.debug("Presto:: Settings not loaded yet");
         window.addEventListener('presto:settings-loaded', () => {
             readyInstallButton();
         });
@@ -26,9 +26,9 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
         const installPath = currentSettings?.installPath
 
         const gamePathTitle = button.dataset.gamePathTitle;
-        console.debug("gamePathTitle", gamePathTitle);
+        console.debug("Presto:: gamePathTitle", gamePathTitle);
         const gameVersion = button.dataset.gameVersion;
-        console.debug("gameVersion", gameVersion);
+        console.debug("Presto:: gameVersion", gameVersion);
 
         if(globalThis.presto.currentSettings.installed) {
             const installedGames = Object.keys(globalThis.presto.currentSettings.installed);
@@ -49,30 +49,31 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
         const gameData = JSON.parse(button.dataset.gameData);
 
         const downloadFile = gamePlatforms[currentPlatform].downloadFile;
-        console.debug("downloadFile", downloadFile);
+        console.debug("Presto:: downloadFile", downloadFile);
 
         const dataInstallToGameDir = gamePlatforms[currentPlatform].dataInstallToGameDir;
-        console.debug("dataInstallToGameDir", dataInstallToGameDir);
+        console.debug("Presto:: dataInstallToGameDir", dataInstallToGameDir);
         const dataInstallToHomeDir = gamePlatforms[currentPlatform].dataInstallToHomeDir;
-        console.debug("dataInstallToHomeDir", dataInstallToHomeDir);
+        console.debug("Presto:: dataInstallToHomeDir", dataInstallToHomeDir);
         const gameExecutable = gamePlatforms[currentPlatform].gameExecutable;
-        console.debug("gameExecutable", gameExecutable);
+        console.debug("Presto:: gameExecutable", gameExecutable);
         const dataInstallPath = gamePlatforms[currentPlatform].dataInstallPath;
-        console.debug("dataInstallPath", dataInstallPath);
+        console.debug("Presto:: dataInstallPath", dataInstallPath);
 
         const usesDmg = gamePlatforms[currentPlatform].usesDMG;
-        console.debug("usesDmg", usesDmg);
+        console.debug("Presto:: usesDmg", usesDmg);
 
         const dataDownloadPath = gameData.downloadPath;
-        console.debug("dataDownloadPath", dataDownloadPath);
+        console.debug("Presto:: dataDownloadPath", dataDownloadPath);
         const dataDownloadFile = gameData.downloadFile;
-        console.debug("dataDownloadFile", dataDownloadFile);
+        console.debug("Presto:: dataDownloadFile", dataDownloadFile);
         
         if(button != null) {
             button.addEventListener("click", async () => {
                 if (currentSettings && installPath) {
                     globalThis.presto.functions.showDownloadBar(true);
-                    const zipPath = `${installPath}/${gamePathTitle}.zip`;
+
+                    const archivePath = `${installPath}/${gamePathTitle}.zip`;
                     const finalPath = `${installPath}/${gamePathTitle}`;
                     const tempPath = `${installPath}/temp`;
                     
@@ -80,7 +81,7 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
                     .then(async () => {
                         // Extract based on platform                        
                         let result = await globalThis.presto.functions.genericInvoke('unzip_file', { 
-                            zipPath: zipPath,
+                            archivePath: archivePath,
                             tempPath: tempPath,
                             finalPath: finalPath,
                             usesDmg: usesDmg,
@@ -88,23 +89,24 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
                         });
                         globalThis.presto.functions.updateProgress('Installing', 100);
 
-                        console.debug("result", result);
+                        console.debug("Presto:: result", result);
                     })
                     .catch((error) => {
-                        console.error("Failed to extract file:", error);
+                        console.error("Presto:: Failed to extract file:", error);
                         throw error; // Re-throw to trigger the finally block
                     })
                     .then(async () => {
-                        console.debug("download path", `${dataDownloadPath}${dataDownloadFile}`);
+                        console.debug("Presto:: download path", `${dataDownloadPath}${dataDownloadFile}`);
                         
                         // There's some configuration you can do per game
                         // Sometimes you need to put the rom in the game dir
                         // Sometimes you need to put the rom in the home dir
                         // Sometimes it needs to go somewhere else...
+                        // Always append the dataInstallPath to the path; if we don't need it, it should be an empty string
 
                         let destPath;
                         if(dataInstallToGameDir) {
-                            destPath = `${finalPath}/${dataDownloadFile}`;
+                            destPath = `${finalPath}${dataInstallPath}/${dataDownloadFile}`;
                         } else {
                             if(dataInstallToHomeDir) {
                                 destPath = `${homeDirPath}${dataInstallPath}/${dataDownloadFile}`;
@@ -112,7 +114,7 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
                                 destPath = `${dataInstallPath}/${dataDownloadFile}`;
                             }
                         }
-                        console.debug("dest path", destPath);
+                        console.debug("Presto:: dest path", destPath);
                         
                         // Create destination directory before downloading
                         await globalThis.presto.functions.genericInvoke('create_directory', {
@@ -123,7 +125,7 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
                         await globalThis.presto.functions.downloadFile(`${dataDownloadPath}${dataDownloadFile}`,destPath);
                     })
                     .catch((error) => {
-                        console.error("Failed to download data file:", error);
+                        console.error("Presto:: Failed to download data file:", error);
                         throw error;
                     })
                     .then(async () => {
@@ -132,7 +134,7 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
                         window.location.reload(true);
                     })
                     .catch((error) => {
-                        console.error("Installation failed:", error);
+                        console.error("Presto:: Installation failed:", error);
                         throw error;
                     })
                     .finally(async () => {
@@ -142,10 +144,10 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
                                 folder: `${tempPath}`
                             });
                             await globalThis.presto.functions.genericInvoke('cleanup_file', { 
-                                file: `${zipPath}`
+                                file: `${archivePath}`
                             });
                         } catch (error) {
-                            console.error("Cleanup failed:", error);
+                            console.error("Presto:: Cleanup failed:", error);
                         } finally {
                             globalThis.presto.functions.showDownloadBar(false);
                         }

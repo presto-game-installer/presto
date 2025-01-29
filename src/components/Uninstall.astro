@@ -8,7 +8,7 @@ const buttonClasses = `btn hidden uninstall float-right bg-red-950 text-white un
 ---
 <script is:inline>
     if(globalThis.presto?.state != 'loaded') {
-        console.log("Settings not loaded yet");
+        console.debug("Presto:: Settings not loaded yet");
         window.addEventListener('presto:settings-loaded', () => {
             readyUninstallButton();
         });
@@ -34,7 +34,7 @@ const buttonClasses = `btn hidden uninstall float-right bg-red-950 text-white un
 
         if(button != null) {
             button.addEventListener("click", async () => {
-                console.log("Uninstall button clicked");
+                console.debug("Presto:: Uninstall button clicked");
                 
                 if (button.innerText === "Press again to confirm Uninstall") {
                     // Second click - do the uninstall
@@ -58,14 +58,14 @@ const buttonClasses = `btn hidden uninstall float-right bg-red-950 text-white un
                         
                         // If we get here, the invoke completed without throwing an error
                         const checkDelete = delete currentSettings.installed[gamePathTitle];
-                        console.log("Check delete:", checkDelete);
+                        console.debug("Presto:: Check delete:", checkDelete);
 
                         if(checkDelete) {
                             await globalThis.presto.functions.saveSettings();
                             window.location.href = `/available-games/${gamePathTitle}`;
                         }
                     } catch (error) {
-                        console.error("Failed to uninstall:", error);
+                        console.error("Presto:: Failed to uninstall:", error);
                         // Show error to user
                         alert("Failed to uninstall game. Check console for details.");
                     }

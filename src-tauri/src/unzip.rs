@@ -10,7 +10,7 @@ use crate::filemgmt::convert_to_windows_path;
 #[tauri::command]
 #[allow(unused_variables)] // To prevent unused parameter warnings on non-macOS
 pub async fn unzip_file(
-    zip_path: String,
+    archive_path: String,
     temp_path: String, 
     final_path: String,
     uses_dmg: Option<bool>,
@@ -23,7 +23,8 @@ pub async fn unzip_file(
     let result = async {
         #[cfg(target_os = "windows")]
         {
-            let zip_path = convert_to_windows_path(&zip_path);
+            // Convert paths to Windows format
+            let archive_path = convert_to_windows_path(&archive_path);
             let final_path = convert_to_windows_path(&final_path);
             // Extract directly to the final path
             Command::new("powershell")
@@ -31,7 +32,7 @@ pub async fn unzip_file(
                     "-Command",
                     &format!(
                         "Expand-Archive -Path '{}' -DestinationPath '{}' -Force",
-                        zip_path,
+                        archive_path,
                         final_path
                     )
                 ])
@@ -44,19 +45,31 @@ pub async fn unzip_file(
         {
             let mut return_path = String::new();
             let mut dest_path = final_path.clone();
+            // If the game uses a DMG, we need to extract to the temp path
             if uses_dmg.expect("uses_dmg is required") {
                 dest_path = temp_path.clone();
             }
+
+            if archive_path.ends_with(".zip") {
             Command::new("unzip")
                 .args(&[
                     "-o",
-                    &zip_path,
+                    &archive_path,
                     "-d",
                     &dest_path
                 ])
                 .output()
                 .map_err(|e| format!("Failed to extract: {}", e))?;
+            }
 
+            if archive_path.ends_with(".tar.xz") {
+                Command::new("tar")
+                    .args(&["-xJf", &archive_path, "-C", &dest_path])
+                    .output()
+                    .map_err(|e| format!("Failed to extract: {}", e))?;
+            }
+
+            // If the game uses a DMG, we need to copy the .app to the final path
             if uses_dmg.expect("uses_dmg is required") {
                 match mount_and_copy_dmg(temp_path.clone(), final_path).await {
                     Ok(path) => return_path = path,
@@ -68,16 +81,33 @@ pub async fn unzip_file(
 
         #[cfg(target_os = "linux")]
         {
+            if archive_path.ends_with(".zip") {
             Command::new("unzip")
                 .args(&[
                     "-o",
-                    &zip_path,
+                    &archive_path,
                     "-d",
                     &final_path
                 ])
                 .output()
                 .map_err(|e| format!("Failed to extract: {}", e))?;
+            }
 
+            if archive_path.ends_with(".tar.xz") {
+                Command::new("tar")
+                    .args(&["-xJf", &archive_path, "-C", &final_path])
+                    .output()
+                    .map_err(|e| format!("Failed to extract: {}", e))?;
+            }
+
+            if archive_path.ends_with(".flatpak") {
+                Command::new("flatpak")
+                    .args(&["install", &archive_path, "-y"])
+                    .output()
+                    .map_err(|e| format!("Failed to extract: {}", e))?;
+            }
+
+            // Set the gameExecutable permissions
             Command::new("chmod")
                 .args(&[
                     "+x",

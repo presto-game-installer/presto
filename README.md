@@ -26,15 +26,23 @@ Lastly - I've wanted to play with Tauri and Rust for a while now... and I haven'
 - Will keep track of installed games
 - Gamepad support for navigating the UI
 
-#### Immediate TODOs:
+#### Short-term TODOs:
 - Need to setup auto-update for Presto
 - Add flatpak support
 - Add a way for games to check for updates and install them
 - Would like to find a way to auto-add games to Steam
 
-#### Future Goals:
+#### Mid-term TODOs:
+- Restrict games from being installed on non-supported platforms
+  - Add a way to overide this to see all games
+  - Add a way to allow linux to install windows games w/ Proton
+- Possible support for Intel Macs vs Apple Silicon Macs?
+- Possible support for non-appimage linux binaries?
 - Better filtering/sorting options
-- Add more games, look into adding open source ports of games
+- Add more games !
+
+#### Future TODOs:
+- Look into adding open source ports of games
 - Look into a companion server app, so if you have gog games, repacks, isos, ect... you could have a way to remotely catalog and install them
 
 #### How can I help?
