@@ -77,23 +77,34 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
                     const downloadFileName = downloadFile.split('/').pop();
                     console.debug("Presto:: downloadFileName", downloadFileName);
 
-                    const archivePath = `${installPath}/${downloadFileName}`;
+                    const archivePath = `${installPath}/${gamePathTitle}/${downloadFileName}`;
                     const finalPath = `${installPath}/${gamePathTitle}`;
                     const tempPath = `${installPath}/temp`;
+                    let didExtract = false;
                     
-                    await globalThis.presto.functions.downloadFile(downloadFile, archivePath)
+                    await globalThis.presto.functions.genericInvoke('create_directory', {
+                            path: finalPath
+                    })
+                    .then (async () => {
+                        await globalThis.presto.functions.downloadFile(downloadFile, archivePath)
+                    })
                     .then(async () => {
-                        // Extract based on platform                        
-                        let result = await globalThis.presto.functions.genericInvoke('unzip_file', { 
-                            archivePath: archivePath,
-                            tempPath: tempPath,
-                            finalPath: finalPath,
-                            usesDmg: usesDmg,
-                            gameExecutable: gameExecutable,
-                        });
-                        globalThis.presto.functions.updateProgress('Installing', 100);
+                        // we should check that we actually need to extract first.
+                        if(!downloadFileName.includes(".flatpak")) {
+                            // Extract based on platform                        
+                            let result = await globalThis.presto.functions.genericInvoke('unzip_file', { 
+                                archivePath: archivePath,
+                                tempPath: tempPath,
+                                finalPath: finalPath,
+                                usesDmg: usesDmg,
+                                gameExecutable: gameExecutable,
+                            });
+                            globalThis.presto.functions.updateProgress('Installing', 100);
 
-                        console.debug("Presto:: result", result);
+                            didExtract = true;
+
+                            console.debug("Presto:: result", result);
+                        }
                     })
                     .catch((error) => {
                         console.error("Presto:: Failed to extract file:", error);
@@ -147,9 +158,13 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
                             await globalThis.presto.functions.genericInvoke('cleanup_folder', { 
                                 folder: `${tempPath}`
                             });
-                            await globalThis.presto.functions.genericInvoke('cleanup_file', { 
-                                file: `${archivePath}`
-                            });
+
+                            //only clean up the file if we extracted from it
+                            if(didExtract) {
+                                await globalThis.presto.functions.genericInvoke('cleanup_file', { 
+                                    file: `${archivePath}`
+                                });
+                            }
                         } catch (error) {
                             console.error("Presto:: Cleanup failed:", error);
                         } finally {

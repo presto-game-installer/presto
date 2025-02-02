@@ -24,6 +24,7 @@ const gameSchema = z.object({
         linux: z.object({
             downloadFile: z.string().optional(),
             gameExecutable: z.string().optional(),  
+            gameWorkingDirAppend: z.string().optional(),
             dataInstallToGameDir: z.boolean().optional(),
             dataInstallToHomeDir: z.boolean().optional(),
             dataInstallPath: z.string().optional(),
@@ -31,6 +32,7 @@ const gameSchema = z.object({
         windows: z.object({
             downloadFile: z.string().optional(),
             gameExecutable: z.string().optional(),
+            gameWorkingDirAppend: z.string().optional(),
             dataInstallToGameDir: z.boolean().optional(),
             dataInstallToHomeDir: z.boolean().optional(),
             dataInstallPath: z.string().optional(),
@@ -38,6 +40,7 @@ const gameSchema = z.object({
         macos: z.object({
             downloadFile: z.string().optional(),
             gameExecutable: z.string().optional(),
+            gameWorkingDirAppend: z.string().optional(),
             dataInstallToGameDir: z.boolean().optional(),
             dataInstallToHomeDir: z.boolean().optional(),
             dataInstallPath: z.string().optional(),

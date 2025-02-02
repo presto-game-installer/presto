@@ -37,8 +37,15 @@ const buttonClasses = `btn hidden play play-${gamePathTitle}`;
             
             let currentSettings = globalThis.presto.currentSettings;
             const installPath = currentSettings?.installPath
+
+            const gameWorkingDirAppend = gamePlatforms[currentPlatform].gameWorkingDirAppend;
+            console.debug("Presto:: gameWorkingDirAppend", gameWorkingDirAppend);
             
-            const gamePath =  installPath + "/" + button.dataset.gamePathTitle + "/";
+            let gamePath =  installPath + "/" + button.dataset.gamePathTitle + "/";
+
+            if (gameWorkingDirAppend != null) {
+                gamePath = gamePath + gameWorkingDirAppend;
+            }
 
             const gameExecutable = gamePlatforms[currentPlatform].gameExecutable;
 

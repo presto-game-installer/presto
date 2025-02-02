@@ -24,9 +24,10 @@ gamePlatforms: {
     windows: {
         downloadFile: "https://github.com/fgsfdsfgs/perfect_dark/releases/download/ci-dev-build/pd-x86_64-windows.zip",
         gameExecutable: "pd.x86_64.exe",
+        gameWorkingDirAppend: "pd-x86_64-windows/",
         dataInstallToGameDir: true,
         dataInstallToHomeDir: false,
-        dataInstallPath: "/data",
+        dataInstallPath: "/pd-x86_64-windows/data",
     },
     macos: {
         downloadFile: "https://github.com/fgsfdsfgs/perfect_dark/releases/download/ci-dev-build/pd-arm64-osx.tar.xz",
@@ -41,3 +42,5 @@ gamePlatforms: {
 ---
 
 Info goes here
+
+** Requires Flatpak in Linux

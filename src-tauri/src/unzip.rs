@@ -1,8 +1,8 @@
 use std::process::Command;
-use crate::filemgmt::create_directory;
 
 #[cfg(target_os = "macos")]
 use std::path::PathBuf;
+use crate::filemgmt::create_directory;
 
 #[cfg(target_os = "windows")]
 use crate::filemgmt::convert_to_windows_path;
@@ -15,10 +15,6 @@ pub async fn unzip_file(
     final_path: String,
     uses_dmg: Option<bool>,
     game_executable: Option<String>) -> Result<String, String> {
-
-    // Create extraction directory if it doesn't exist
-    create_directory(&temp_path)?;
-    create_directory(&final_path)?;
 
     let result = async {
         #[cfg(target_os = "windows")]
@@ -47,6 +43,9 @@ pub async fn unzip_file(
             let mut dest_path = final_path.clone();
             // If the game uses a DMG, we need to extract to the temp path
             if uses_dmg.expect("uses_dmg is required") {
+                // Create extraction directory if it doesn't exist
+                create_directory(&temp_path)?;
+
                 dest_path = temp_path.clone();
             }
 
@@ -107,7 +106,6 @@ pub async fn unzip_file(
             }
 
             if archive_path.ends_with(".tar.xz") {
-                tauri::api::info!("Executing command: tar -xvf {} -C {} --strip=1", archive_path, final_path);
                 Command::new("tar")
                     .args(&["-xvf", &archive_path, "--strip=1", "-C", &final_path])
                     .output()
