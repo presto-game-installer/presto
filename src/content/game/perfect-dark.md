@@ -10,7 +10,7 @@ lastUpdatedDate: "1/25/2025"
 gameData: {
     needsGameData: true,
     downloadPath: "https://archive.org/download/z64-pal-gc-debug/",
-    downloadFile: "pd64-na-1.1.z64",
+    downloadFile: "pd.ntsc-final.z64",
 }
 supportedPlatforms: ["windows", "macos", "linux native"]
 gamePlatforms: {

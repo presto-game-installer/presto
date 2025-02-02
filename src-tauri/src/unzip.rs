@@ -64,7 +64,7 @@ pub async fn unzip_file(
 
             if archive_path.ends_with(".tar.xz") {
                 Command::new("tar")
-                    .args(&["-xJf", &archive_path, "-C", &dest_path])
+                    .args(&["-xJf", &archive_path, "--strip=1", "-C", &dest_path])
                     .output()
                     .map_err(|e| format!("Failed to extract: {}", e))?;
             }
@@ -76,6 +76,19 @@ pub async fn unzip_file(
                     Err(e) => return Err(e)
                 }
             }
+
+            // Set the gameExecutable permissions
+            Command::new("chmod")
+                .args(&[
+                    "+x",
+                    &format!("{}/{}",
+                     dest_path,
+                     game_executable.expect("game_executable is required")
+                    )
+                ])
+                .output()
+                .map_err(|e| format!("Failed to set gameExecutable permissions: {}", e))?;
+            
             Ok(return_path)
         }
 
@@ -94,8 +107,9 @@ pub async fn unzip_file(
             }
 
             if archive_path.ends_with(".tar.xz") {
+                tauri::api::info!("Executing command: tar -xvf {} -C {} --strip=1", archive_path, final_path);
                 Command::new("tar")
-                    .args(&["-xJf", &archive_path, "-C", &final_path])
+                    .args(&["-xvf", &archive_path, "--strip=1", "-C", &final_path])
                     .output()
                     .map_err(|e| format!("Failed to extract: {}", e))?;
             }

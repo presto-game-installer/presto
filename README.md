@@ -31,6 +31,7 @@ Lastly - I've wanted to play with Tauri and Rust for a while now... and I haven'
 - Add flatpak support
 - Add a way for games to check for updates and install them
 - Would like to find a way to auto-add games to Steam
+- Add a cancel button to stop the current operation
 
 #### Mid-term TODOs:
 - Restrict games from being installed on non-supported platforms

@@ -125,11 +125,22 @@ pub async fn run_executable(game_executable: &str, install_path: &str) -> Result
 
     #[cfg(target_os = "macos")]
     {
-        let path = PathBuf::from(install_path).join(game_executable);
-        let run_game_result = Command::new("open")
-        .args(&[path])
-        .output()
-        .map_err(|e| format!("Failed to run game_executable: {}", e))?;
+
+        let run_game_result;
+        if game_executable.ends_with(".app") {
+            let path = PathBuf::from(install_path).join(game_executable);
+            run_game_result = Command::new("open")
+            .args(&[path])
+            .current_dir(install_path)
+            .output()
+            .map_err(|e| format!("Failed to run game_executable: {}", e))?;
+        } else {
+            let command = "./".to_owned() + game_executable;
+            run_game_result = Command::new(command)
+            .current_dir(install_path)
+            .output()
+            .map_err(|e| format!("Failed to run game_executable: {}", e))?;
+        }
 
         if !run_game_result.status.success() {
             return Err(format!("Failed to run app: {}", 

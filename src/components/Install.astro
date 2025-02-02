@@ -73,11 +73,15 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
                 if (currentSettings && installPath) {
                     globalThis.presto.functions.showDownloadBar(true);
 
-                    const archivePath = `${installPath}/${gamePathTitle}.zip`;
+                    // Split downloadFile path and get the filename
+                    const downloadFileName = downloadFile.split('/').pop();
+                    console.debug("Presto:: downloadFileName", downloadFileName);
+
+                    const archivePath = `${installPath}/${downloadFileName}`;
                     const finalPath = `${installPath}/${gamePathTitle}`;
                     const tempPath = `${installPath}/temp`;
                     
-                    await globalThis.presto.functions.downloadFile(downloadFile, zipPath)
+                    await globalThis.presto.functions.downloadFile(downloadFile, archivePath)
                     .then(async () => {
                         // Extract based on platform                        
                         let result = await globalThis.presto.functions.genericInvoke('unzip_file', { 
