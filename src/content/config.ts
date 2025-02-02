@@ -16,7 +16,6 @@ const gameSchema = z.object({
         message: 'tags must be unique',
     }).optional(),
     gameData: z.object({
-        needsGameData: z.boolean(),
         downloadPath: z.string().url().optional(),
         downloadFile: z.string().optional(),
     }).optional(),

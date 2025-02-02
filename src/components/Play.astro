@@ -54,8 +54,8 @@ const buttonClasses = `btn hidden play play-${gamePathTitle}`;
             console.debug("Presto:: Play button clicked");
 
             result = await globalThis.presto.functions.genericInvoke('run_executable', { 
-                gameExecutable: gameExecutable,
-                installPath: gamePath
+                "gameExecutable": gameExecutable,
+                "installPath": gamePath
             });
 
             console.debug("Presto:: result", result);

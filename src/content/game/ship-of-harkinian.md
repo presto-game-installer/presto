@@ -8,7 +8,6 @@ tags: ["RPG", "Decompilation", "N64"]
 version: "8.0.6"
 lastUpdatedDate: "8/12/2024"
 gameData: {
-    needsGameData: true,
     downloadPath: "https://archive.org/download/z64-pal-gc-debug/",
     downloadFile: "z64-PAL-1.1.z64",
 }

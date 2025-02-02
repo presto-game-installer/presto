@@ -8,7 +8,6 @@ tags: ["FPS", "Decompilation", "N64"]
 version: "1.0.0"
 lastUpdatedDate: "1/25/2025"
 gameData: {
-    needsGameData: true,
     downloadPath: "https://archive.org/download/z64-pal-gc-debug/",
     downloadFile: "pd.ntsc-final.z64",
 }

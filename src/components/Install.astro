@@ -63,9 +63,9 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
         const usesDmg = gamePlatforms[currentPlatform].usesDMG;
         console.debug("Presto:: usesDmg", usesDmg);
 
-        const dataDownloadPath = gameData.downloadPath;
+        const dataDownloadPath = gameData?.downloadPath;
         console.debug("Presto:: dataDownloadPath", dataDownloadPath);
-        const dataDownloadFile = gameData.downloadFile;
+        const dataDownloadFile = gameData?.downloadFile;
         console.debug("Presto:: dataDownloadFile", dataDownloadFile);
         
         if(button != null) {
@@ -111,33 +111,35 @@ const buttonClasses = `btn hidden install install-${gamePathTitle}`;
                         throw error; // Re-throw to trigger the finally block
                     })
                     .then(async () => {
-                        console.debug("Presto:: download path", `${dataDownloadPath}${dataDownloadFile}`);
-                        
-                        // There's some configuration you can do per game
-                        // Sometimes you need to put the rom in the game dir
-                        // Sometimes you need to put the rom in the home dir
-                        // Sometimes it needs to go somewhere else...
-                        // Always append the dataInstallPath to the path; if we don't need it, it should be an empty string
+                        if(dataDownloadFile && dataDownloadPath) {
+                            console.debug("Presto:: download path", `${dataDownloadPath}${dataDownloadFile}`);
+                            
+                            // There's some configuration you can do per game
+                            // Sometimes you need to put the rom in the game dir
+                            // Sometimes you need to put the rom in the home dir
+                            // Sometimes it needs to go somewhere else...
+                            // Always append the dataInstallPath to the path; if we don't need it, it should be an empty string
 
-                        let destPath;
-                        if(dataInstallToGameDir) {
-                            destPath = `${finalPath}${dataInstallPath}/${dataDownloadFile}`;
-                        } else {
-                            if(dataInstallToHomeDir) {
-                                destPath = `${homeDirPath}${dataInstallPath}/${dataDownloadFile}`;
+                            let destPath;
+                            if(dataInstallToGameDir) {
+                                destPath = `${finalPath}${dataInstallPath}/${dataDownloadFile}`;
                             } else {
-                                destPath = `${dataInstallPath}/${dataDownloadFile}`;
+                                if(dataInstallToHomeDir) {
+                                    destPath = `${homeDirPath}${dataInstallPath}/${dataDownloadFile}`;
+                                } else {
+                                    destPath = `${dataInstallPath}/${dataDownloadFile}`;
+                                }
                             }
+                            console.debug("Presto:: dest path", destPath);
+                            
+                            // Create destination directory before downloading
+                            await globalThis.presto.functions.genericInvoke('create_directory', {
+                                path: destPath.substring(0, destPath.lastIndexOf('/'))
+                            });
+                            
+                            // Download the data file to the destination path
+                            await globalThis.presto.functions.downloadFile(`${dataDownloadPath}${dataDownloadFile}`,destPath);
                         }
-                        console.debug("Presto:: dest path", destPath);
-                        
-                        // Create destination directory before downloading
-                        await globalThis.presto.functions.genericInvoke('create_directory', {
-                            path: destPath.substring(0, destPath.lastIndexOf('/'))
-                        });
-                        
-                        // Download the data file to the destination path
-                        await globalThis.presto.functions.downloadFile(`${dataDownloadPath}${dataDownloadFile}`,destPath);
                     })
                     .catch((error) => {
                         console.error("Presto:: Failed to download data file:", error);

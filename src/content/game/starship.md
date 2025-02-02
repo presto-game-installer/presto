@@ -9,7 +9,6 @@ tags: ["Action","Decompilation", "N64"]
 version: "1.0"
 lastUpdatedDate: "12/22/2024"
 gameData: {
-    needsGameData: true,
     downloadPath: "https://archive.org/download/z64-pal-gc-debug/",
     downloadFile: "sf64-US-1.1ra.z64",
 }

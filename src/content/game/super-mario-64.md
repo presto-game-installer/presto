@@ -8,7 +8,6 @@ tags: ["Platformer", "Decompilation", "N64"]
 version: "1.0.0"
 lastUpdatedDate: "11/18/22"
 gameData: {
-    needsGameData: false
 }
 supportedPlatforms: ["windows", "linux native"]
 gamePlatforms: {
