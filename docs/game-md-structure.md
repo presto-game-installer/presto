@@ -23,7 +23,6 @@ tags: "Tags for filtering games" (Array of Strings)
 version: "Game Version" (String)
 lastUpdatedDate: "Date game was last updated [MM/DD/YYYY]" (String)
 gameData: {
-    "needsGameData": "true/false if the game needs data files to be installed" (Boolean)
     "downloadPath": "a link to where the game's files are hosted" (String)
     "downloadFile": "the name of the game's data file to download" (String)
 }
@@ -33,6 +32,7 @@ gamePlatforms: {
     "platform": {
         "downloadFile": "a link to the game's download file for the platform", (String)
         "gameExecutable": "the name of the game's executable file" (String)
+        "gameWorkingDirAppend": "a path to be appended to the game's path before the executable" (String)
         "usesDMG": "true/false if the game's download file is a DMG file" (Boolean)
         "dataInstallToGameDir": "true/false if the game's data files should be installed to the game's directory" (Boolean)
         "dataInstallToHomeDir": "true/false if the game's data files should be installed to the user's home directory; NOTE that the dataInstallPath is appended to the home directory, if this is true" (Boolean)
