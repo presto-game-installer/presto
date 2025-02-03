@@ -13,7 +13,7 @@ supportedPlatforms: ["windows", "linux native"]
 gamePlatforms: {
     linux: {
         downloadFile: "https://archive.org/download/z64-pal-gc-debug/sm64-plus-linux.zip",
-        gameExecutable: "sm64-plus.appimage"
+        gameExecutable: "start.bash"
     },
     windows: {
         downloadFile: "https://archive.org/download/z64-pal-gc-debug/sm64-plus-pc.zip",
