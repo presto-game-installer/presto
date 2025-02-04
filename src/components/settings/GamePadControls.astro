@@ -2,7 +2,7 @@
 ---
 <script src="/js/gamecontroller.min.js" is:inline/>
 <script is:inline>
-    if(globalThis.presto?.state != 'loaded') {
+    if(globalThis?.presto?.state != 'loaded') {
         console.debug("Presto:: Settings not loaded yet");
         addEventListener('presto:settings-loaded', () => {
             readyGamePadControls();

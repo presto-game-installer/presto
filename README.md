@@ -25,6 +25,9 @@ Lastly - I've wanted to play with Tauri and Rust for a while now... and I haven'
 - Will install a game's data files
 - Will keep track of installed games
 - Gamepad support for navigating the UI
+- Restrict games from being installed on non-supported platforms
+  - Add a way to overide this to see all games
+  - Add a way to allow linux to install windows games w/ Proton
 
 #### Short-term TODOs:
 - Need to setup auto-update for Presto
@@ -34,9 +37,6 @@ Lastly - I've wanted to play with Tauri and Rust for a while now... and I haven'
 - Add a cancel button to stop the current operation
 
 #### Mid-term TODOs:
-- Restrict games from being installed on non-supported platforms
-  - Add a way to overide this to see all games
-  - Add a way to allow linux to install windows games w/ Proton
 - Possible support for Intel Macs vs Apple Silicon Macs?
 - Possible support for non-appimage linux binaries?
 - Better filtering/sorting options

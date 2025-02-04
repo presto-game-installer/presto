@@ -1,13 +1,91 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import SetBaseDirectory from "../components/settings/SetBaseDirectory.astro";
 ---
+<script is:inline>
+  //This needs to be inline because things that bind to the ui need to be in inline
+
+  if(globalThis.presto?.state != 'loaded') {
+        console.debug("Presto:: Settings not loaded yet");
+        addEventListener('presto:settings-loaded', () => {
+          readySettings();
+        });
+    } else {
+      readySettings();
+    }
+
+  //update page when the page is loaded
+  function updatePage() {
+      document.querySelector(".getbasedir").textContent = globalThis.presto.currentSettings.installPath;
+      document.querySelectorAll('.presto-setting').forEach(setting => {
+          setting.querySelector('input').checked = globalThis.presto.currentSettings[setting.getAttribute('data-setting-name')];
+      });
+  }
+
+  // when the dom is ready run this
+  function readySettings(){
+    // uniform way of seeing if the settings are available globally
+    if(!globalThis.presto?.currentSettings) {
+        window.addEventListener('presto:settings-loaded', () => {
+            updatePage();
+        });
+    } else {
+        updatePage();
+    }
+
+    document.querySelectorAll('.presto-setting').forEach(setting => {
+        const onlyOnPlatform = setting.getAttribute('data-only-on-platform');
+        if (onlyOnPlatform && onlyOnPlatform !== globalThis.presto.currentPlatform) {
+            setting.style.display = 'none';
+        }
+    });
+
+    //bind the ui to the functions for tauri
+    document.querySelector("button.setbasedir").addEventListener("click", async () => {
+        globalThis.presto.functions.setBaseDirectory().then(
+            () => {
+                updatePage();
+            });
+    });
+
+    document.querySelectorAll('.presto-setting').forEach(setting => {
+      setting.querySelector('input').addEventListener('change', async (e) => {
+        const settingName = e.target.getAttribute('data-setting-name');
+        const isChecked = e.target.checked;
+        globalThis.presto.currentSettings[settingName] = isChecked;
+        await globalThis.presto.functions.saveSettings();
+        console.debug(`Presto:: Setting ${settingName} updated to ${isChecked}`);
+      });
+    });
+  }
+</script>
+
 
 <BaseLayout sideBarActiveItemID="settings">
   <div>
     <div class="mb-5">
       <div class="text-3xl w-full font-bold">Settings</div>
     </div>
-    <SetBaseDirectory/>
+    <div>
+      <button class="btn setbasedir mb-2">Set Base Directory</button>
+      <div>Base directory is set to: <span class="getbasedir"></span></div>
+    </div>
+    <br/>
+    <div class="presto-setting" data-setting-name="disregardPlatform">
+      <label>
+          <input 
+          class="w-4 h-4 mr-2 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" 
+          type="checkbox">
+            Disregard platform filter and show all games?
+      </label>
+    </div>  
+    <br/>
+    <div class="presto-setting" data-setting-name="showWindowsForProton" data-only-on-platform="linux">
+      <label>
+          <input 
+          class="w-4 h-4 mr-2 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" 
+          type="checkbox">
+            Linux ONLY - Allow Windows games to show up so Proton can be used?
+      </label>
+    </div>  
   </div>
 </BaseLayout>
